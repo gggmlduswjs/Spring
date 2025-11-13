@@ -1,0 +1,11 @@
+
+1. Controller - 자바로 작성( @Controller )
+2. 매서드단위 매핑 ( 하나의 컨트롤러에 다양한 매서드 단위의 매핑을 작성할 수 있다 )
+3. 모델저장하기 (request저장소 ) -> Model 타입의 객체를 제공함 
+4. 클라이언트 정보 getParameter("id")로 수집하는것을 @RequestParam과  객체로 제공받고 싶으면 @ModelAttribute 사용할 수 있다
+5. 뷰이름 prefix와 suffix  빼고 순수이름만 표시한다
+
+
+        접두사, 접미사 
+        <beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />

@@ -1,0 +1,22 @@
+메이븐리포지토리
+jstl
+gson
+ojdbc8
+
+https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+
+spring mvc
+
+
+
+
+서블릿 한 개(Dispatcher Servlet) - Front Controller 패턴
+서블릿 ( service - 요청정보, 응답정보를 객체로 제공함)
+
+1) controller 변화
+(모델과 view 반환만 책임진다)
+spring mvc
+
+Controller : 자바
+Model
+View

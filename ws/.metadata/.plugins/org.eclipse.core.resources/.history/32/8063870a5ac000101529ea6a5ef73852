@@ -1,0 +1,8 @@
+package com.acorn.day1prac;
+
+public class Customer {
+	
+	String id;
+	String pw;
+
+}

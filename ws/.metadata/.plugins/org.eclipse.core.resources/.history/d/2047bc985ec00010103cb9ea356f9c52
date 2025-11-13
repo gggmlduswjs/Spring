@@ -1,0 +1,22 @@
+package com.acorn.day1prac;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller
+public class ModelAttributeController {
+	
+	// 매서드단위 매핑
+	
+	// modelAttrl?id=angel&pw=1234
+	// 기본생성자와 setter 사용함 => 스프링이 사용함
+	@RequestMapping(value="/modelAttrl",method=RequestMethod.GET)
+	public String modelAttrTest(Customer customer) {
+		
+		System.out.println(customer.getId());
+		System.out.println(customer.getPw());
+		return "modelAttrView";
+	}
+
+}

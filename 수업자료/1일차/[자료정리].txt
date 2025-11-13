@@ -1,0 +1,43 @@
+[자료정리]
+
+서블릿
+-java 기반 웹 개발의 핵심
+-브라우저 요청 -> 서블릿이 처리 ->jsp로 화면 보여주는 구조(mvc)
+-http 요청/응답을 직접 다루며, 웹 애플리케이션의 Controller 역할 수행
+
+Forward와 Include 개념 비교
+1. forward()
+-서버 내부에서 페이지 이동
+-url은 변경되지 않음
+-요청과 응답이 그대로 다음 페이지에 전달됩
+2. include()
+-하나의 페이지 안에 다른 JSP/서블릿을 끼워 넣는 방식
+-header, footer, menu 같이 공통 영역을 재사용할 때 사용
+- include되는 페이지가 실행된 후 그 결과를 합쳐서 응답
+
+https://luna-archive.tistory.com/m/77?utm_source=chatgpt.com
+-> forward(), include()의 차이점을 한글로 정리한 글
+
+MVC2 패턴
+-M (Model): 데이터 처리, DB 연동
+-V (View): JSP 화면
+-C (Controller): 서블릿
+요청을 받고 적절한 Model 호출 후 → View로 전달(Forward)
+서블릿 = Controller, JSP = View
+
+
+https://codevang.tistory.com/192?utm_source=chatgpt.com
+-> 서블릿과 mvc 구조
+
+
+Front Controller 패턴
+-하나의 서블릿이 모든 요청을 받아 처리하는 패턴
+
+Spring MVC와의 연결
+-> Spring MVC 구조는=>  효율적으로 더 진화된 형태 
+ MVC2 + FrontController 패턴
+
+DispatcherServlet = Front Controller
+@Controller = 개별 서블릿 역할
+@RequestParam, @ModelAttribute = 요청 데이터 받는 방식
+

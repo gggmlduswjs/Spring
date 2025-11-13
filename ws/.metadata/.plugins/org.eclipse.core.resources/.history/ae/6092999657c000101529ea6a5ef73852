@@ -1,0 +1,17 @@
+package com.acorn.day1prac;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class ParmController {
+	
+	//매서드단위매핑
+	//spring mvc
+	
+	@RequestMapping(value="/paramHi")
+	public String paramTest() {
+		return "paramView";
+	}
+
+}

@@ -1,0 +1,31 @@
+package com.acorn.day1prac;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+// 방법2. Controller을 만드는 방법 (@Controller 애너테이션방법)
+
+//매서드단위 url 매핑 제공한다
+//매서드 : ModelAndView를 책인진다(반환한다)
+
+
+@Controller
+public class BController {
+	
+	//매서드 단위로 url 매핑
+	@RequestMapping(value="/hil",method=RequestMethod.GET)
+	
+	//View : void인 경우 매핑 이름으로 view로 인식 :hil -> hil view(hil.jsp) 뷰로 인식함
+	//Model : 
+	public void method1(Model model) {
+		model.addAllAttributes("data","spring 좋아1");
+		
+	}
+	
+	//
+	
+	//
+
+}

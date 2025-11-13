@@ -1,0 +1,11 @@
+INDEX VERSION 1.4+C:\Users\user\Desktop\javaFullstack\½ºÇÁ¸µ\ws\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1438004280.index
+2586214904.index
+472072224.index
+472072224.index
+102577725.index
+1773393425.index
+2233528475.index
+1613914910.index
+3088779709.index
+2403752827.index

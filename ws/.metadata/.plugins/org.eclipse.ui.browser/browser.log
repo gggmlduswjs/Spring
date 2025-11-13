@@ -1,0 +1,31 @@
+
+11월 12, 2025 10:50:10.667 NEW SESSION
+11월 12, 2025 10:50:10.667 [13672:22052:1112/105010.666:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 12, 2025 10:50:10.785 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 12, 2025 10:50:36.941 [13672:22052:1112/105036.940:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 12, 2025 10:51:25.835 [13672:22052:1112/105125.835:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 12, 2025 13:36:18.245 [13672:10212:1112/133618.241:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:154] Attempting to show IPH IPH_LiveCaption before browser initialization complete; IPH will not be shown.
+11월 12, 2025 13:42:07.291 [13672:10212:1112/134207.291:ERROR:mojo\public\cpp\bindings\lib\interface_endpoint_client.cc:732] Message 0 rejected by interface blink.mojom.WidgetHost
+11월 12, 2025 14:57:39.16 [13672:10212:1112/145739.016:ERROR:components\device_event_log\device_event_log_impl.cc:198] [14:57:39.018] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: �슂�냼媛� �뾾�뒿�땲�떎. (0x490)
+11월 12, 2025 14:57:52.599 [13672:10212:1112/145752.599:ERROR:components\device_event_log\device_event_log_impl.cc:198] [14:57:52.601] USB: usb_service_win.cc:105 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 6}) failed: �슂�냼媛� �뾾�뒿�땲�떎. (0x490)
+
+11월 13, 2025 12:28:08.297 NEW SESSION
+11월 13, 2025 12:28:08.297 [27672:16984:1113/122808.296:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 13, 2025 12:28:08.395 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 12:28:18.772 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 12:28:18.889 [29164:29492:1113/122818.889:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 13, 2025 12:29:29.329 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 12:29:29.430 [26908:22216:1113/122929.429:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 13, 2025 12:49:42.710 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 12:49:42.829 [29044:28068:1113/124942.829:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 13, 2025 14:17:17.11 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 14:17:17.128 [28808:24912:1113/141717.128:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 13, 2025 14:17:37.854 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 14:17:38.18 [30348:30088:1113/141738.018:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 13, 2025 14:18:07.109 [30348:30088:1113/141807.108:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 13, 2025 14:19:01.392 [30348:30088:1113/141901.392:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+
+11월 13, 2025 16:11:52.624 NEW SESSION
+11월 13, 2025 16:11:52.624 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 13, 2025 16:11:52.651 [30048:21924:1113/161152.651:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: DEPRECATED_ENDPOINT
+11월 13, 2025 16:12:17.204 [30048:21924:1113/161217.204:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED

@@ -1,0 +1,149 @@
+<검색키워드>
+
+->항상 최소한의 것을 생각하기
+
+  서블릿,
+  jsp ,
+ 서블릿 forward, 
+ 서블릿  include 
+ frontcontroller 패턴  
+ mvc2패턴
+ 스프링mvc 
+ modelAttribute, RequestParam
+  중에서 한개 이상 검색하고 정리하기  -10분 
+ 자료공유하기 (읽어주기)
+(1교시)
+
+
+Hello 스프링!!
+스프링 만나기  
+ 
+
+학습목표:
+
+1.  FrontController  패턴 알아보기
+2.  MVC2 와. 스프링 MVC   동작방식  알아보기 
+3.  controller변화 알아보고  두 가지 방법으로 Controller 만들고 사용하기
+4.  매핑의 변화 알아보고 사용하기
+     -매서드단위의 매핑제공
+     -Getmapping, Postmapping
+5.  편리해진 데이터 수집기능  알아보고 사용하기
+    -requestParam
+    -modelAttribute 
+
+
+
+<<달라진  MVC 코드  >>
+Controller 
+Model
+View
+
+
+
+
+<< 좋은점 만나기 >>
+
+Controller와 매핑의 변화
+- POJO 작성함  (순수 자바로 작성)
+
+servlet(DispatcherServlet) url 요청에 맞는  controller 찾아서 실행 줌 
+실제요청에 대한 처리작업을 Controller가 담당한다
+
+
+1. Controller 작성방법
+   1) Controller 인퍼테이스 구현     ( url매핑- 클래스 단위)
+  -클래스단위매핑
+    2) @controller. 애너테이션 사용 ( url매핑- 매서드 단위)
+   -매서드 단위로 매핑 
+ 
+ 
+ 
+
+2.  편리해진 데이터 수집기능 제공
+사용자의 데이터 수집기능 제공
+http요청시  헤더와 바디로 전달된 값을 쉽게 얻어 올 수 있다
+
+학습하기
+requestParam    
+ModelAttribute 
+
+
+?id=test&pw=1234
+
+이전의 방식. : 
+HttpServletRequest. Request  
+String id.  = Request.getParameter(“id”);
+String pw. = request.getParameter(“pw”);
+
+또는
+
+HttpServletRequest. Request  
+String id.  = Request.getParameter(“id”);
+String pw. = request.getParameter(“pw”);
+User user = new User(id, pw);
+
+
+==>스프링에서 어떻게 바뀌는지 경험해보자 
+스프링에서의 변화
+우와 좋다 !!!!
+
+
+
+실습 1) 기존의  MVC2 문제를 스프링으로 작성해보기
+
+
+실습과제!!!   (10개의 문제를  Spring MVC로 작성하기)
+ 
+다음의 서블릿을 만드시오 (url요청이 같으면 안됩니다.)
+   
+1. 두 수를 사용자로 부터 입력 받아 사칙연산해서 제공하기   /calc
+2. 3단 제공하기 (3단 제공하는 서비스)                              /dan3
+3. 원하는단 제공하기 (원하는단을 제공하는 서비스)            /dan?num=3
+4. 학생성적을 처리하기 위한 Score class를 만든것처럼        /movie 
+자신이 처리하고 싶은 자료에 대한 class를 만들고 그 정보를 제공하기 (응답해 주기)
+예) 책정보:Book class  , Music ..등
+5. 원하는 수만큼의 별을 출력하기 ( 원하는 수만큼 별을 출력하는 서비스제공하기)  /star?cnt=5
+6. 수를 사용자로부터 받으면 입력한 수에 대한 약수를 구해서 제공하기    /divisor
+(약수를 구해주는 서비스)
+7. 화이팅메시지 제공하기    /fighting
+8. 랜덤한 화이팅메시지 제공하기 /message/random
+9. 귀여운이미지 제공하기    /cute/img
+10. 랜덤한 귀여운이미지 제공하기  /cute/img/random
+11. 원하는 서비스 만들어서 제공하기  
+
+ 
+
+
+############################################
+  메이븐 - 편리해진 라이브러리 받기 기능지원
+  스프링은 메이븐 통해서 라이브러리를 관리한다 :  
+ - 의존성관리 메이븐사용하기  (라이브러리를 의미함: 의존성)
+ - 원격저장소(메이븐리포지토리)에서 필요한 라이브러리 다운로드 받는다.( 직접받지 않는다)
+ - local 저장소에 (특정 위치에 내려받기 한다)
+ - 라이브러리에 문제가 생기면 로컬저장소의 내용을 지우고 다시받아야 한다.
+ - pom.xml 파일에 dependency 추가한다. => 우클릭 -> maven ->updateProject 클릭한다
+############################################
+
+
+
+    lombok 사용법:
+    구글에 lombok다운로드  tools에 두기 
+    설치방법 : java -jar lombok.jar
+    lombok.jar 다운로드 설치 및 pom에 추가해야 함
+
+
+
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	    <version>1.18.34</version>
+	    <scope>provided</scope>
+	</dependency>
+  
+  
+
+
+
+
+
+

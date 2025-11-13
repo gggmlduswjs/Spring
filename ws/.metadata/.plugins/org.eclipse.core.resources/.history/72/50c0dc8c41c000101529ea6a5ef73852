@@ -1,0 +1,9 @@
+package com.acorn.day1prac;
+
+import org.springframework.web.servlet.mvc.Controller;
+
+// 1. Controller 만드는 방법(Controller 인터페이스를 구현하는 방법)
+
+public class AController implements Controller{
+
+}

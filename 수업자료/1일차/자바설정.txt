@@ -1,0 +1,13 @@
+
+제어판  -> 시스템 -> ->고급설정
+환경변수
+ 
+
+시스템변수
+변수이름 => JAVA_HOME
+변수 값=> C:\Program Files\Java\jdk-11
+
+
+PATH: 
+새로만들기 
+%JAVA_HOME%\bin

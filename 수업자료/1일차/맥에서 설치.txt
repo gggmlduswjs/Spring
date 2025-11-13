@@ -1,0 +1,69 @@
+1단계: Rosetta 2 설치 확인
+
+터미널 열기 (⌘ + Space → Terminal 입력)
+
+다음 명령어 입력:
+
+softwareupdate --install-rosetta
+
+
+이미 설치되어 있으면 안내 메시지가 나옵니다.
+
+설치가 필요하면 안내에 따라 설치 진행.
+
+2단계: STS 3 다운로드
+
+이미 링크를 가지고 계신 것처럼, STS 3.9.17 다운로드
+ 클릭.
+
+.dmg 파일 다운로드 완료.
+
+3단계: DMG 마운트 및 설치
+
+다운로드한 .dmg 파일 더블 클릭 → 마운트됨.
+
+나타나는 창에서 SpringToolSuite.app 아이콘을 Applications 폴더로 드래그.
+
+응용 프로그램 폴더에서 설치 확인 가능.
+
+4단계: Rosetta로 STS 실행 설정
+
+응용 프로그램 폴더에서 SpringToolSuite.app 선택.
+
+마우스 오른쪽 클릭 → 정보 가져오기(Get Info) 선택.
+
+“Rosetta를 사용하여 열기(Open using Rosetta)” 체크박스 선택.
+
+M3에서는 이걸 해야 정상적으로 STS 3가 실행됩니다.
+
+5단계: JDK 11 설치 및 환경변수 설정
+
+STS 3는 JDK 11을 권장합니다.
+
+Homebrew로 설치 가능:
+
+brew install openjdk@11
+
+
+설치 후, 환경 변수 설정:
+
+echo 'export PATH="/usr/local/opt/openjdk@11/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+
+~/.zshrc는 기본 zsh 사용자 설정 파일입니다.
+
+설치된 JDK 버전 확인:
+
+java -version
+
+
+java version "11.x.x" 나와야 정상.
+
+6단계: STS 실행
+
+응용 프로그램 폴더에서 SpringToolSuite.app 더블 클릭.
+
+정상적으로 실행되면 완료.
+
+워크스페이스 선택 후 개발 시작.

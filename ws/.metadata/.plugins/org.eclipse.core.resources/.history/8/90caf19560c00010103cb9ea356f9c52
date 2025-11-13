@@ -1,0 +1,10 @@
+package com.acorn.day1prac;
+
+import org.springframework.stereotype.Controller;
+
+// 1번
+
+@Controller
+public class Ex01Controller {
+
+}

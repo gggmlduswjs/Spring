@@ -1,0 +1,32 @@
+package com.acorn.day1prac;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class ParmController {
+	
+	//매서드단위매핑
+	//spring mvc
+	
+	///paramHi?id=hello&pw=1234
+	
+	@RequestMapping(value="/paramHi",method=RequestMethod.GET)
+	public String paramTest( String id, 
+							 String pw) {	//id=hello, pw=1234
+		System.out.println("id"+id);
+		System.out.println("pw"+pw);
+		return "paramView";
+	}
+	
+	@RequestMapping(value="/paramHi2",method=RequestMethod.GET)
+	public String paramTest2(@RequestParam (value="id2") String id, 
+							 @RequestParam String pw) {	//id=hello, pw=1234
+		System.out.println("id"+id);
+		System.out.println("pw"+pw);
+		return "paramView";
+	}
+
+}

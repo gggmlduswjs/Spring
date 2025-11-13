@@ -1,0 +1,11 @@
+// key=value&key=value&key=value  ( GET  요청시 쿼리 스트링)  : url 노출됨
+        // key=value&key=value                 (post  Form으로 감싸서 보낼때) : url 노출안됨
+
+?id=victoali&pw=1234
+
+@RequestPararm
+
+@RequestMapping(value="/hi4","GET")
+public String method1(String id, String pw){
+
+}
