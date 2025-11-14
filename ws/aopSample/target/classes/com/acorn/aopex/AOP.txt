@@ -1,0 +1,13 @@
+
+
+class MyAdvice{
+
+    
+    
+    public Object  invoke( Method method, Object object, Object...args) {
+    
+        Object obj=  method.invoke( obj, args);
+        return obj;
+    }
+
+}

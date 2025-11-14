@@ -1,0 +1,33 @@
+
+
+책정보응답하기 (Spring  mvc)
+/////////////////////////////////// 
+ @Controller
+ BookController
+  	
+  	@Autowired
+     BookService;
+       //service객체의 주입을  , 생성자주입, 세터주입, 필드주입, 롬복세터주입  사용해보기     
+     
+     
+      
+     -매서드단위 매핑 (/book)
+      String bookName  =bookService.getBook();
+      
+      모델저장
+      뷰반환
+      
+/////////////////////////////////////      
+	@Component => 객체생성하시오
+      class BookService {
+      	
+      	public String getBook(){
+      		String[] books = new String[] {"코스모스", "종의 기원", "사피엔스", "호모데우스"};
+      		Random = new Random();
+      		int index=r.nextInt(books.length);	//4 (0~3)
+      		return books[index];
+      	
+      	}
+      
+      
+      }

@@ -1,0 +1,12 @@
+
+스프링이 객체를 생성하고 주입하는 방법
+
+
+1. xml 지시서 작성하기
+2. java config 
+3. 애너테이션 방법 (소스코드가 제공될 때만 가능)
+   @Component  ( @Service, @Repository) - 의미적 구분
+   @Autowired  (필드, 생성자, 세터 가능)  
+
+
+ 

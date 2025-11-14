@@ -1,0 +1,16 @@
+	<!-- 계산기 객체 생성 -->
+	<bean id="cal"  class="com.acorn.day2.di.ACalculator"></bean>	
+	<!--  프로그램 객체 생성 및 주입 -->
+	<bean id="program"  class="com.acorn.day2.di.Program">
+		<!-- setter 주입  name ="써터이름 set제외하고 소문자로 작성" -->
+		<property name="calculator"  ref="cal"></property>
+	</bean>
+ 
+
+	
+	<!--  객체 생성과 조립( 주입) -->	
+	<bean  id="cal" class="com.acorn.day2.di.BCalculator"></bean>	
+	<bean   id="program" class="com.acorn.day2.di.Program">
+		<constructor-arg ref="cal"></constructor-arg>
+	</bean>
+	  

@@ -93,3 +93,7 @@
 127.0.0.1 - - [13/Nov/2025:16:36:17 +0900] "GET / HTTP/1.1" 404 808
 0:0:0:0:0:0:0:1 - - [13/Nov/2025:16:36:17 +0900] "GET /day1prac/WEB-INF/classes/com/acorn/day1prac/Ex01Controller2.java HTTP/1.1" 404 722
 0:0:0:0:0:0:0:1 - - [13/Nov/2025:16:36:36 +0900] "GET /day1prac/ex02 HTTP/1.1" 500 3599
+127.0.0.1 - - [13/Nov/2025:16:43:56 +0900] "GET / HTTP/1.1" 404 808
+0:0:0:0:0:0:0:1 - - [13/Nov/2025:16:43:56 +0900] "GET /day1prac/WEB-INF/classes/com/acorn/day1prac/Ex09Controller.java HTTP/1.1" 404 722
+0:0:0:0:0:0:0:1 - - [13/Nov/2025:16:44:01 +0900] "GET /day1prac/ex09 HTTP/1.1" 200 196
+0:0:0:0:0:0:0:1 - - [13/Nov/2025:16:44:01 +0900] "GET /day1prac/resources/imgs/p1.jpg HTTP/1.1" 200 12200168

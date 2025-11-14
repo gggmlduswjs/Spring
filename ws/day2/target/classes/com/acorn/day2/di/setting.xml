@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+ 
+ 
+ <!--  객체생성,주입 지시 시 -->
+ <!-- Calculator cal = new LGCalculator(); -->
+ 
+ <bean id="calculator" class="com.acorn.day2.di.SMCalculator"></bean>
+ 
+ <!-- constructor injection 생성자 주입 -->
+ <!-- Program program = new Program(cal); -->
+ <bean id="program" class="com.acorn.day2.di.Program">
+ <constructor-arg  ref="calculator"></constructor-arg>
+ </bean>
+ 
+  <!-- setter injection 생성자 주입 -->
+  <!--  
+  <bean id="program" class="com.acorn.day2.di.Program">
+  <property name="calculator" ref="calculator"></property>
+  </bean>
+ 	-->
+ </beans>

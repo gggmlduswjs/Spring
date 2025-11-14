@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aop-reference-model>
+<aop-project name="day2Prac"/>
+<aop-project name="di"/>
+<aop-project name="aopSample">
+<aspect-definition advice-class-name="com.acorn.aop.TimeAdvice" advice-method-name="method(org.aspectj.lang.ProceedingJoinPoint)" advice-type="AROUND" aspect-end-line-number="12" aspect-name="timeAdvice" aspect-start-line-number="12" factory-id="org.springframework.ide.eclipse.aop.core.annotationAspectDefinitionElementFactory" file="/aopSample/src/main/webapp/WEB-INF/spring/root-context.xml" pointcut-expression="execution(* com.acorn.aop.MyCalculator2.*( int, int))" proxy-target-class="true">
+<aop-reference advice-type="AROUND" bean="1:BeansModel|2:aopSample|3:src/main/webapp/WEB-INF/spring/root-context.xml|7:beans:8|8:myCalculator2:8" bean-file="/aopSample/src/main/webapp/WEB-INF/spring/root-context.xml" bean-start-line="8" factory-id="org.springframework.ide.eclipse.aop.core.aopReferenceElementFactory" file="/aopSample/src/main/webapp/WEB-INF/spring/root-context.xml" source="=aopSample/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.acorn.aop{TimeAdvice.java[TimeAdvice~method~QProceedingJoinPoint;" source-start-line="20" target="=aopSample/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.acorn.aop{MyCalculator2.java[MyCalculator2~add~I~I" target-start-line="9"/>
+<aop-reference advice-type="AROUND" bean="1:BeansModel|2:aopSample|3:src/main/webapp/WEB-INF/spring/root-context.xml|7:beans:8|8:myCalculator2:8" bean-file="/aopSample/src/main/webapp/WEB-INF/spring/root-context.xml" bean-start-line="8" factory-id="org.springframework.ide.eclipse.aop.core.aopReferenceElementFactory" file="/aopSample/src/main/webapp/WEB-INF/spring/root-context.xml" source="=aopSample/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.acorn.aop{TimeAdvice.java[TimeAdvice~method~QProceedingJoinPoint;" source-start-line="20" target="=aopSample/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.acorn.aop{MyCalculator2.java[MyCalculator2~sub~I~I" target-start-line="21"/>
+</aspect-definition>
+</aop-project>
 <aop-project name="day1"/>
 <aop-project name="day1Prac"/>
+<aop-project name="day2"/>
 <aop-project name="controllerPrj"/>
 </aop-reference-model>

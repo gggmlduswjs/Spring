@@ -1,0 +1,31 @@
+스프링  (DI,   AOP)   DI :객체생성 주입 (객체조립기)  ,  AOP (관점지향프로그램)
+
+   IOC container (스프링컨테이너)  :  객체생성, 주입 (조립) 
+  - DI  (의존성 주입 ) : dpendency Injection 
+  
+   의존성주입
+   :방식)
+   -  xml 방식 
+   -  java config 
+   -  애너테이션  ( @Component,   @Service , @Repository   :객체생성
+                       @Autowired   :주입 )
+
+   
+  주입방식
+   : 생성자주입
+   : 세터주입
+   : 필드주입
+
+
+ AOP :  관점이 다른 코드를 쉽게 추가할 수 있게 해 준다 
+
+   class A{
+    public  void  printStar(){
+           // 시작시간
+          
+           System.out.println("******");
+
+          // 종료시간 (  걸린시간)
+    }
+
+   }

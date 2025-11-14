@@ -1,0 +1,196 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 266338304 bytes for Failed to commit area from 0x0000000703200000 to 0x0000000713000000 of length 266338304.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./open/src/hotspot/os/windows/os_windows.cpp:3283), pid=13444, tid=17252
+#
+# JRE version:  (11.0.17+10) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (11.0.17+10-LTS-269, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dfile.encoding=UTF-8 com.acorn.aopex.AOP흉내내기
+
+Host: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz, 8 cores, 15G,  Windows 10 , 64 bit Build 19041 (10.0.19041.4957)
+Time: Mon Nov  4 22:45:30 2024  Windows 10 , 64 bit Build 19041 (10.0.19041.4957) elapsed time: 0.025627 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000002bc157b5000):  JavaThread "Unknown thread" [_thread_in_vm, id=17252, stack(0x000000f221f00000,0x000000f222000000)]
+
+Stack: [0x000000f221f00000,0x000000f222000000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x62b5da]
+V  [jvm.dll+0x7653df]
+V  [jvm.dll+0x766a89]
+V  [jvm.dll+0x767113]
+V  [jvm.dll+0x23dd28]
+V  [jvm.dll+0x62896a]
+V  [jvm.dll+0x61d625]
+V  [jvm.dll+0x2f2d3c]
+V  [jvm.dll+0x2f2bc2]
+V  [jvm.dll+0x2f78e6]
+V  [jvm.dll+0x33a2df]
+V  [jvm.dll+0x339d10]
+V  [jvm.dll+0x2d0368]
+V  [jvm.dll+0x2d14d6]
+V  [jvm.dll+0x73f9a7]
+V  [jvm.dll+0x74123f]
+V  [jvm.dll+0x347039]
+V  [jvm.dll+0x725280]
+V  [jvm.dll+0x3b5c1f]
+V  [jvm.dll+0x3b7d31]
+C  [jli.dll+0x5207]
+C  [ucrtbase.dll+0x21bb2]
+C  [KERNEL32.DLL+0x17374]
+C  [ntdll.dll+0x4cc91]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x000002bc155d61d0, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x000002bc157ca000 GCTaskThread "GC Thread#0" [stack: 0x000000f222000000,0x000000f222100000] [id=12184]
+  0x000002bc15828800 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000f222100000,0x000000f222200000] [id=16164]
+  0x000002bc1582e000 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000f222200000,0x000000f222300000] [id=2656]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffcae53f5f7]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000002bc157b0970] Heap_lock - owner thread: 0x000002bc157b5000
+
+Heap address: 0x0000000703200000, size: 4046 MB, Compressed Oops mode: Non-zero based: 0x0000000703200000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff6fb4e0000 - 0x00007ff6fb4ef000 	C:\Program Files\Java\jdk-11.0.17\bin\javaw.exe
+0x00007ffd0b410000 - 0x00007ffd0b608000 	C:\Windows\SYSTEM32\ntdll.dll
+0x00007ffcc3940000 - 0x00007ffcc395a000 	C:\Program Files\Avast Software\Avast\aswhook.dll
+0x00007ffd0b300000 - 0x00007ffd0b3c2000 	C:\Windows\System32\KERNEL32.DLL
+0x00007ffd08f50000 - 0x00007ffd0924e000 	C:\Windows\System32\KERNELBASE.dll
+0x00007ffd09330000 - 0x00007ffd09430000 	C:\Windows\System32\ucrtbase.dll
+0x00007ffd05980000 - 0x00007ffd05995000 	C:\Program Files\Java\jdk-11.0.17\bin\VCRUNTIME140.dll
+0x00007ffd00d80000 - 0x00007ffd00d98000 	C:\Program Files\Java\jdk-11.0.17\bin\jli.dll
+0x00007ffd09430000 - 0x00007ffd094e2000 	C:\Windows\System32\ADVAPI32.dll
+0x00007ffd0ad90000 - 0x00007ffd0ae2e000 	C:\Windows\System32\msvcrt.dll
+0x00007ffd09ea0000 - 0x00007ffd09f40000 	C:\Windows\System32\sechost.dll
+0x00007ffd0a7f0000 - 0x00007ffd0a913000 	C:\Windows\System32\RPCRT4.dll
+0x00007ffd09300000 - 0x00007ffd09327000 	C:\Windows\System32\bcrypt.dll
+0x00007ffd098c0000 - 0x00007ffd09a5d000 	C:\Windows\System32\USER32.dll
+0x00007ffd08e80000 - 0x00007ffd08ea2000 	C:\Windows\System32\win32u.dll
+0x00007ffd0ab30000 - 0x00007ffd0ab5b000 	C:\Windows\System32\GDI32.dll
+0x00007ffd08b00000 - 0x00007ffd08c17000 	C:\Windows\System32\gdi32full.dll
+0x00007ffd08eb0000 - 0x00007ffd08f4d000 	C:\Windows\System32\msvcp_win.dll
+0x00007ffce7520000 - 0x00007ffce77ba000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.4355_none_60b8b9eb71f62e16\COMCTL32.dll
+0x00007ffcfc050000 - 0x00007ffcfc05a000 	C:\Windows\SYSTEM32\VERSION.dll
+0x00007ffd09e70000 - 0x00007ffd09e9f000 	C:\Windows\System32\IMM32.DLL
+0x00007ffce5000000 - 0x00007ffce509b000 	C:\Program Files\Java\jdk-11.0.17\bin\msvcp140.dll
+0x00007ffcae260000 - 0x00007ffcaed7a000 	C:\Program Files\Java\jdk-11.0.17\bin\server\jvm.dll
+0x00007ffd0abd0000 - 0x00007ffd0abd8000 	C:\Windows\System32\PSAPI.DLL
+0x00007ffcf31c0000 - 0x00007ffcf31c9000 	C:\Windows\SYSTEM32\WSOCK32.dll
+0x00007ffd05a70000 - 0x00007ffd05a97000 	C:\Windows\SYSTEM32\WINMM.dll
+0x00007ffd0ab60000 - 0x00007ffd0abcb000 	C:\Windows\System32\WS2_32.dll
+0x00007ffd07290000 - 0x00007ffd072a2000 	C:\Windows\SYSTEM32\kernel.appcore.dll
+0x00007ffd042f0000 - 0x00007ffd04300000 	C:\Program Files\Java\jdk-11.0.17\bin\verify.dll
+0x00007ffd06600000 - 0x00007ffd067e4000 	C:\Windows\SYSTEM32\DBGHELP.DLL
+0x00007ffd059f0000 - 0x00007ffd05a24000 	C:\Windows\SYSTEM32\dbgcore.DLL
+0x00007ffd08df0000 - 0x00007ffd08e72000 	C:\Windows\System32\bcryptPrimitives.dll
+0x00007ffd01ea0000 - 0x00007ffd01ec8000 	C:\Program Files\Java\jdk-11.0.17\bin\java.dll
+0x00007ffd026e0000 - 0x00007ffd026ea000 	C:\Program Files\Java\jdk-11.0.17\bin\jimage.dll
+0x00007ffd00cf0000 - 0x00007ffd00d06000 	C:\Program Files\Java\jdk-11.0.17\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Java\jdk-11.0.17\bin;C:\Windows\SYSTEM32;C:\Program Files\Avast Software\Avast;C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.4355_none_60b8b9eb71f62e16;C:\Program Files\Java\jdk-11.0.17\bin\server
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: com.acorn.aopex.AOP흉내내기
+java_class_path (initial): C:\Users\jooyeon\Documents\2024_2_cloud\스프링\swscloude\aopSample\target\classes;C:\Users\jooyeon\.m2\repository\org\springframework\spring-aop\5.0.7.RELEASE\spring-aop-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-beans\5.0.7.RELEASE\spring-beans-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-core\5.0.7.RELEASE\spring-core-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-jcl\5.0.7.RELEASE\spring-jcl-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\aspectj\aspectjweaver\1.9.8\aspectjweaver-1.9.8.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-context\5.0.7.RELEASE\spring-context-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-expression\5.0.7.RELEASE\spring-expression-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-webmvc\5.0.7.RELEASE\spring-webmvc-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\springframework\spring-web\5.0.7.RELEASE\spring-web-5.0.7.RELEASE.jar;C:\Users\jooyeon\.m2\repository\org\aspectj\aspectjrt\1.6.10\aspectjrt-1.6.10.jar;C:\Users\jooyeon\.m2\repository\org\slf4j\slf4j-api\1.6.6\slf4j-api-1.6.6.jar;C:\Users\jooyeon\.m2\repository\org\slf4j\jcl-over-slf4j\1.6.6\jcl-over-slf4j-1.6.6.jar;C:\Users\jooyeon\.m2\repository\org\slf4j\slf4j-log4j12\1.6.6\slf4j-log4j12-1.6.6.jar;C:\Users\jooyeon\.m2\repository\log4j\log4j\1.2.15\log4j-1.2.15.jar;C:\Users\jooyeon\.m2\repository\javax\inject\javax.inject\1\javax.inject-1.jar;C:\Users\jooyeon\.m2\repository\javax\servlet\servlet-api\2.5\servlet-api-2.5.jar;C:\Users\jooyeon\.m2\repository\javax\servlet\jsp\jsp-api\2.1\jsp-api-2.1.jar;C:\Users\jooyeon\.m2\repository\javax\servlet\jstl\1.2\jstl-1.2.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 266338304                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4242538496                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5836300                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122910970                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122910970                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk-11.0.17
+PATH=C:/Program Files/Java/jdk-11.0.17/bin/server;C:/Program Files/Java/jdk-11.0.17/bin;C:\Users\jooyeon\Documents\2024_수업준비\tools\apache-tomcat-9.0.86-windows-x64\bin;C:\oracle\WINDOWS.X64_193000_db_home\bin;C:\Program Files\Java\jdk-11.0.17\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Git\cmd;C:\Users\jooyeon\AppData\Local\Microsoft\WindowsApps;C:\Users\jooyeon\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\jooyeon\cloudnative2023;C:\Users\jooyeon\AppData\Roaming\npm;C:\sts-3.9.17.RELEASE;
+USERNAME=jooyeon
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 140 Stepping 1, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 19041 (10.0.19041.4957)
+Hyper-V role detected
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 140 stepping 1 microcode 0x8a, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx, evex, sha, fma
+
+Memory: 4k page, system-wide physical 16183M (4112M free)
+TotalPageFile size 16183M (AvailPageFile size 171M)
+current process WorkingSet (physical memory assigned to process): 10M, peak: 10M
+current process commit charge ("private bytes"): 60M, peak: 314M
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (11.0.17+10-LTS-269) for windows-amd64 JRE (11.0.17+10-LTS-269), built on Sep 13 2022 19:26:37 by "mach5one" with MS VC++ 15.9 (VS2017)
+
+END.

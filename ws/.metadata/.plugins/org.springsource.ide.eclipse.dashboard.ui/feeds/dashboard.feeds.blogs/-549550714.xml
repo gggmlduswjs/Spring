@@ -1,685 +1,244 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 13 Nov 2025 00:37:33 GMT</lastBuildDate><item><title><![CDATA[Null-Safe applications with Spring Boot 4]]></title><link>https://spring.io/blog/2025/11/12/null-safe-applications-with-spring-boot-4</link><guid isPermaLink="true">https://spring.io/blog/2025/11/12/null-safe-applications-with-spring-boot-4</guid><dc:creator><![CDATA[sdeleuze]]></dc:creator><pubDate>Wed, 12 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is a new blog post in the &lt;a href=&quot;https://spring.io/blog/2025/09/02/road_to_ga_introduction&quot;&gt;Road to GA series&lt;/a&gt;, this time sharing an update on the status of the null-safety support across the Spring portfolio, as a follow-up of my previous related blog post &lt;a href=&quot;https://spring.io/blog/2025/03/10/null-safety-in-spring-apps-with-jspecify-and-null-away&quot;&gt;Null Safety in Spring applications with JSpecify and NullAway&lt;/a&gt; and &lt;a href=&quot;https://www.youtube.com/watch?v=5Lbxq6LP7FY&quot;&gt;related Spring I/O talk&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;are-we-fixing-the-billion-dollar-mistake&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#are-we-fixing-the-billion-dollar-mistake&quot; aria-label=&quot;are we fixing the billion dollar mistake permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Are we fixing ¡°the billion dollar mistake¡±?&lt;/h2&gt;
-&lt;p&gt;Yes, we are! And by ¡°we¡±, I mean &lt;a href=&quot;https://jspecify.dev/about/&quot;&gt;the organizations involved in the JSpecify projects&lt;/a&gt;, the Spring team, and you, Spring developers who are going to upgrade to Spring Boot 4.&lt;/p&gt;
-&lt;p&gt;That said, I don¡¯t think ¡°the billion dollar mistake¡± was the invention of the null reference that &lt;a href=&quot;https://en.wikipedia.org/wiki/Tony_Hoare&quot;&gt;Tony Hoare&lt;/a&gt; apologized for. I think the real mistake was to not express it explicitly in the type system, as this is the implicit nature of the nullability that causes so many &lt;a href=&quot;https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/NullPointerException.html&quot;&gt;&lt;code&gt;NullPointerException&lt;/code&gt;&lt;/a&gt; on production. If you make it explicit, nullability becomes a zero cost abstraction for expressing the potential absence of value, backward compatible with existing APIs.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://jspecify.dev/&quot;&gt;JSpecify&lt;/a&gt; has been designed to provide &lt;a href=&quot;https://jspecify.dev/docs/api/org/jspecify/annotations/package-summary.html&quot;&gt;a set of annotations&lt;/a&gt;, with related &lt;a href=&quot;https://jspecify.dev/docs/start-here/&quot;&gt;documentation&lt;/a&gt; allowing Java codebases to express explicitly the nullability of their APIs. A key point is that those annotations are not tied to a specific tool, they have been designed to allow multiple consistent implementations thanks to the detailed &lt;a href=&quot;https://jspecify.dev/docs/spec/&quot;&gt;specifications&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;a-huge-collaborative-effort&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#a-huge-collaborative-effort&quot; aria-label=&quot;a huge collaborative effort permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;A huge collaborative effort&lt;/h2&gt;
-&lt;p&gt;Annotating randomly a few APIs with &lt;code&gt;@Nullable&lt;/code&gt; is easy, but fully annotating existing codebases with a checker part of your build treating nullability inconsistencies as compilation errors is much more challenging. This is the huge task the Spring team has started a few months ago.&lt;/p&gt;
-&lt;p&gt;Today, I am delighted to share that we, as a team, have reached our goal to make most of the Spring portfolio APIs null-safe, in order to empower Spring developers to reduce or remove the risk of &lt;code&gt;NullPointerException&lt;/code&gt; on production.&lt;/p&gt;
-&lt;p&gt;More specifically, the following projects now provide null-safe APIs:&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 14 Nov 2025 07:02:02 GMT</lastBuildDate><item><title><![CDATA[A Bootiful Podcast: The legendary Bruce Eckel on language design, effects, abstraction, concurrency, and so much more]]></title><link>https://spring.io/blog/2025/11/13/a-bootiful-podcast-bruce-eckel</link><guid isPermaLink="true">https://spring.io/blog/2025/11/13/a-bootiful-podcast-bruce-eckel</guid><dc:creator><![CDATA[joshlong]]></dc:creator><pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this installment, I sit down with the legendary Bruce Eckel, who has probably forgotten more about programming languages than I will ever know, and whose book &lt;em&gt;Thinking in Java&lt;/em&gt; helped launch me into a career.&lt;/p&gt;
+&lt;iframe title=&quot;The legendary Bruce Eckel on language design, effects, abstraction, concurrency, and so much more&quot; allowtransparency=&quot;true&quot; height=&quot;300&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:300px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?from=embed&amp;i=chp3x-19c1817-pb&amp;square=1&amp;share=1&amp;download=1&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;rtl=0&amp;logo_link=&amp;btn-skin=7&amp;size=300&quot; loading=&quot;lazy&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[Spring Framework 6.2.13 Available Now]]></title><link>https://spring.io/blog/2025/11/13/spring-framework-6-2-13-available-now</link><guid isPermaLink="true">https://spring.io/blog/2025/11/13/spring-framework-6-2-13-available-now</guid><dc:creator><![CDATA[bclozel]]></dc:creator><pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I am pleased to announce that Spring Framework &lt;code&gt;6.2.13&lt;/code&gt; is available now.&lt;/p&gt;
+&lt;p&gt;Spring Framework &lt;code&gt;6.2.13&lt;/code&gt; ships with &lt;a href=&quot;https://github.com/spring-projects/spring-framework/releases/tag/v6.2.13&quot;&gt;42 fixes and documentation improvements&lt;/a&gt;. This version will be shipped next week with Spring Boot &lt;code&gt;3.4.12&lt;/code&gt; and &lt;code&gt;3.5.8&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-framework/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-framework&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-framework/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-framework/reference/&quot;&gt;Documentation&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Framework 7.0 General Availability]]></title><link>https://spring.io/blog/2025/11/13/spring-framework-7-0-general-availability</link><guid isPermaLink="true">https://spring.io/blog/2025/11/13/spring-framework-7-0-general-availability</guid><dc:creator><![CDATA[jhoeller]]></dc:creator><pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Dear Spring community,&lt;/p&gt;
+&lt;p&gt;On behalf of the team and everyone who has contributed, I am pleased to announce that Spring Framework 7.0
+is generally available now! Spring Framework 7.0 is the beginning of a new framework generation with a
+focus on Java 25 and the latest open source ecosystem, serving as the foundation for Spring Boot 4.0.&lt;/p&gt;
+&lt;p&gt;This generation of Spring comes with a pragmatic baseline and dependency upgrade:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Spring Boot 4.0&lt;/li&gt;
-&lt;li&gt;Spring Framework 7.0&lt;/li&gt;
-&lt;li&gt;Spring Data 4.0&lt;/li&gt;
-&lt;li&gt;Spring Security 7.0&lt;/li&gt;
-&lt;li&gt;Spring Batch 6.0&lt;/li&gt;
-&lt;li&gt;Spring Kafka 4.0&lt;/li&gt;
-&lt;li&gt;Spring Integration 7.0&lt;/li&gt;
-&lt;li&gt;Spring GraphQL 2.0&lt;/li&gt;
-&lt;li&gt;Spring Web Services 5.0&lt;/li&gt;
-&lt;li&gt;Spring AMQP 4.0&lt;/li&gt;
-&lt;li&gt;Spring Shell 4.0&lt;/li&gt;
-&lt;li&gt;Spring Kafka 4.0&lt;/li&gt;
-&lt;li&gt;Spring Plugin 4.0&lt;/li&gt;
-&lt;li&gt;Spring HATEOAS 3.0&lt;/li&gt;
-&lt;li&gt;Spring Modulith 2.0&lt;/li&gt;
-&lt;li&gt;Spring Vault 4.0&lt;/li&gt;
-&lt;li&gt;Spring Cloud Commons 5.0&lt;/li&gt;
-&lt;li&gt;Spring Cloud Gateway 5.0&lt;/li&gt;
-&lt;li&gt;Micrometer 1.16&lt;/li&gt;
-&lt;li&gt;Reactor 2025.0&lt;/li&gt;
+&lt;li&gt;Embracing Java 25 (as the latest LTS) while retaining a Java 17 baseline&lt;/li&gt;
+&lt;li&gt;Jakarta EE 11 API level: Servlet 6.1, JPA 3.2, Bean Validation 3.1&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#null-safety&quot;&gt;Comprehensive null safety through JSpecify&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#jackson-3x-support&quot;&gt;Support for Jackson 3.0&lt;/a&gt; (retaining deprecated support for Jackson 2.x)&lt;/li&gt;
+&lt;li&gt;Kotlin 2.2&lt;/li&gt;
+&lt;li&gt;JUnit 6.0&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;A few Spring projects do not provide yet null-safe APIs, but plan to do so in a near future:&lt;/p&gt;
+&lt;p&gt;Our initial Spring Framework 7.0 release ships with a wide range of new features, including:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Spring AI (planned in 2.0)&lt;/li&gt;
-&lt;li&gt;Spring Session&lt;/li&gt;
-&lt;li&gt;Spring LDAP&lt;/li&gt;
-&lt;li&gt;Spring gRPC (tentatively planned in 1.0)&lt;/li&gt;
-&lt;li&gt;The rest of Spring Cloud (tentatively planned in 2026.0)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#programmatic-bean-registration&quot;&gt;Programmatic bean registration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#resilience-features-retrytemplate-retryable-concurrencylimit&quot;&gt;Core resilience features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#introducing-jmsclient-and-revisiting-jdbcclient&quot;&gt;JmsClient&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#api-versioning&quot;&gt;API versioning&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#http-interface-client-configuration&quot;&gt;HTTP Interface Client configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#resttestclient&quot;&gt;RestTestClient&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Worth to notice that some dependencies used by Spring have also annotated their APIs with JSpecify annotations, and likely more are coming:&lt;/p&gt;
+&lt;p&gt;Check out our &lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes&quot;&gt;release notes&lt;/a&gt;
+for a comprehensive overview of enhancements and upgrade notes.&lt;/p&gt;
+&lt;p&gt;Cheers,
+Juergen&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-framework/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-framework&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-framework/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-framework/reference/&quot;&gt;Documentation&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Cloud 2025.1.0-RC1 (aka Oakwood) has been released]]></title><link>https://spring.io/blog/2025/11/13/spring-cloud-2025-1-0-RC1-aka-oakwood-has-been-released</link><guid isPermaLink="true">https://spring.io/blog/2025/11/13/spring-cloud-2025-1-0-RC1-aka-oakwood-has-been-released</guid><dc:creator><![CDATA[spencergibb]]></dc:creator><pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the community, I am pleased to announce that the Release Candidate 1 (RC1) of the &lt;a href=&quot;https://cloud.spring.io&quot;&gt;Spring Cloud 2025.1.0&lt;/a&gt; Release Train is available today. The release can be found in &lt;a href=&quot;https://repo.spring.io/milestone/&quot;&gt;Spring Milestone&lt;/a&gt; repository. You can check out the 2025.1.0 &lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-release/wiki/Spring-Cloud-2025.1-Release-Notes&quot;&gt;release notes for more information&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;notable-changes-in-the-202510-release-train&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#notable-changes-in-the-202510-release-train&quot; aria-label=&quot;notable changes in the 202510 release train permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Notable Changes in the 2025.1.0 Release Train&lt;/h2&gt;
+&lt;p&gt;Highlights of this release are support for &lt;a href=&quot;https://spring.io/blog/2025/11/06/spring-boot-4-0-0-RC2-available-now&quot;&gt;Spring Boot 4.0.0-RC2&lt;/a&gt;, updates for Jackson 3 support, initial support for &lt;a href=&quot;https://spring.io/blog/2025/11/12/null-safe-applications-with-spring-boot-4&quot;&gt;JSpecify Null-Safety&lt;/a&gt;, dependency updates and bug fixes.&lt;/p&gt;
+&lt;p&gt;A complete list of changes for this release can found in the &lt;a href=&quot;https://github.com/orgs/spring-cloud/projects/185&quot;&gt;2025.1.0-RC1 GitHub Project&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;spring-cloud-function&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-function&quot; aria-label=&quot;spring cloud function permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Function&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;JUnit&lt;/li&gt;
-&lt;li&gt;GraphQL&lt;/li&gt;
-&lt;li&gt;Caffeine&lt;/li&gt;
+&lt;li&gt;Significant enhancements in the discovery of complex input/output types.&lt;/li&gt;
+&lt;li&gt;Support for post-processing Kotlin functions. Although the feature is mostly used in Spring Cloud Stream, the supporting implementation is in Spring Cloud Functions.&lt;/li&gt;
+&lt;li&gt;Support for preserving AWS Context in AWS Custom Runutime support of AWS Lambda&lt;/li&gt;
+&lt;li&gt;Migration to Jackson 3&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Kotlin 2, the new baseline for Spring Framework 7 and Spring Boot 4, automatically translates JSpecify annotations to Kotlin nullability. Goodbye &lt;a href=&quot;https://kotlinlang.org/docs/java-interop.html#notation-for-platform-types&quot;&gt;platform types&lt;/a&gt;, including for generics, Spring APIs now look like if they were natively written in Kotlin!&lt;/p&gt;
-&lt;h2 id=&quot;null-safe-usage-of-spring-apis&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#null-safe-usage-of-spring-apis&quot; aria-label=&quot;null safe usage of spring apis permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Null-safe usage of Spring APIs&lt;/h2&gt;
-&lt;p&gt;The easiest way to benefit from Spring null-safety is to upgrade to Spring Boot 4 and use an IDE that supports JSpecify annotations to provide feedback to the developer on how to handle potential nullability issues detected from Spring APIs usage.&lt;/p&gt;
-&lt;p&gt;With JetBrains being a member of the JSpecify group since its inception, the IntelliJ IDEA team has been working on a first class JSpecify support that will be available as of IntelliJ IDEA 2025.3 (release expected in a few days).&lt;/p&gt;
-&lt;p&gt;Andrei Kogun, product expert at JetBrains, shares more details about it:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The adoption of JSpecify is a great example of how collaboration across the Java ecosystem can create not just another standard, but one that developers actually benefit from in everyday work.&lt;/p&gt;
-&lt;p&gt;IntelliJ IDEA added support for JSpecify early on ? back when the first drafts of the specification appeared ? and we¡¯ve been improving it ever since. Today, it includes full coverage for generic types and complex data-flow analysis, making nullability checks both powerful and intuitive. Community feedback and cooperation from teams migrating their codebases to JSpecify, have been key to shaping that support.&lt;/p&gt;
-&lt;p&gt;Starting with IntelliJ IDEA 2025.3, the IDE will automatically prefer JSpecify annotations when they¡¯re available on the classpath, even over JetBrains¡¯s own ones. That means when you fix nullability issues, these annotations are not just recognized ? they¡¯re also generated automatically through quick-fixes and refactorings.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;For example, see the screenshot below where IntelliJ IDEA warns about a potential nullability issue and guides the developer with various ways to handle that.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://static.spring.io/blog/sdeleuze/20251112/intellij-idea-nullability.png&quot; alt=&quot;IntelliJ IDEA warnings and guidance&quot;&gt;&lt;/p&gt;
-&lt;p&gt;The Spring Tools team is also working on &lt;a href=&quot;https://github.com/spring-projects/spring-tools/issues/1624&quot;&gt;configuring JSpecify automatically in Eclipse and VSCode&lt;/a&gt;, leveraging existing support for nullability annotation in the Eclipse platform.&lt;/p&gt;
-&lt;p&gt;Those IDE checks will allow you to greatly reduce the risk of &lt;code&gt;NullPointerException&lt;/code&gt; at runtime.&lt;/p&gt;
-&lt;h2 id=&quot;null-safe-applications&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#null-safe-applications&quot; aria-label=&quot;null safe applications permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Null-safe applications&lt;/h2&gt;
-&lt;p&gt;If your ambition is not to reduce but to remove almost any chance of &lt;code&gt;NullPointerException&lt;/code&gt; at runtime in your application, you can annotate your Spring Boot application with JSpecify annotations and we highly recommend to use a build-time nullability checker like &lt;a href=&quot;https://github.com/uber/NullAway&quot;&gt;NullAway&lt;/a&gt;. Just be aware that¡¯s significantly more involved than just consuming null-safe APIs as described in the previous section, so make sure to fully understand the implications before starting.&lt;/p&gt;
-&lt;p&gt;The Spring team has been collaborating with &lt;a href=&quot;https://manu.sridharan.net/&quot;&gt;Manu Sridharan&lt;/a&gt;, Professor of Computer Science and Engineering at the University of California, Riverside, who is also the NullAway lead. He shared the following thoughts:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The NullAway team is excited to support the JSpecify standard. We are eager to continue working with the Spring team and others on increasing null safety throughout the Java ecosystem.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;To make your application null-safe, you will typically annotate the packages with &lt;a href=&quot;https://jspecify.dev/docs/api/org/jspecify/annotations/NullMarked.html&quot;&gt;@NullMarked&lt;/a&gt;, and specify nullable type usages with &lt;a href=&quot;https://jspecify.dev/docs/api/org/jspecify/annotations/Nullable.html&quot;&gt;@Nullable&lt;/a&gt;, see more details in the &lt;a href=&quot;https://docs.spring.io/spring-framework/reference/7.0/core/null-safety.html#null-safety-guidelines&quot;&gt;related guidelines in Spring Framework null-safety documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;If you use Gradle, you can use the &lt;a href=&quot;https://github.com/spring-gradle-plugins/nullability-plugin&quot;&gt;nullability Gradle plugin&lt;/a&gt; that the Spring Boot team has contributed, or configure manually NullAway. Maven is supported as well but requires a &lt;a href=&quot;https://github.com/sdeleuze/jspecify-nullaway-demo/blob/maven/pom.xml&quot;&gt;more verbose configuration&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Be aware that NullAway JSpecify mode requires a recent javac version, so we recommend using Java 25 if you can, otherwise most JDK 21.0.8+ distributions (except Oracle JDK) should support the &lt;code&gt;-XDaddTypeAnnotationsToSymbol=true&lt;/code&gt; flag that will allow NullAway to work as expected. A Java 17 backport of this flag may be available in the future.&lt;/p&gt;
-&lt;p&gt;If, like Spring, you need to retain a Java 17 baseline, you can use a Java 25 toolchain and configure your Maven or Gradle build with the javac option &lt;code&gt;--release 17&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;See related Gradle and Maven build examples in my &lt;a href=&quot;https://github.com/sdeleuze/jspecify-nullaway-demo&quot;&gt;jspecify-nullaway-demo&lt;/a&gt; repository for both Gradle and Maven.&lt;/p&gt;
-&lt;p&gt;Be aware that former Spring nullability annotations in the &lt;a href=&quot;https://docs.spring.io/spring-framework/docs/7.0.x/javadoc-api/org/springframework/lang/package-summary.html&quot;&gt;org.springframework.lang&lt;/a&gt; package are now deprecated in favor of JSpecify ones.&lt;/p&gt;
-&lt;h2 id=&quot;potential-future-refinements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#potential-future-refinements&quot; aria-label=&quot;potential future refinements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Potential future refinements&lt;/h2&gt;
-&lt;h3 id=&quot;cannot-attach-type-annotations-errors&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#cannot-attach-type-annotations-errors&quot; aria-label=&quot;cannot attach type annotations errors permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Cannot attach type annotations errors&lt;/h3&gt;
-&lt;p&gt;The Spring team has worked to minimize such side effects, but with recent versions of Java like Java 25, javac can report errors when importing a class that has type use annotations like JSpecify &lt;a href=&quot;https://jspecify.dev/docs/api/org/jspecify/annotations/Nullable.html&quot;&gt;&lt;code&gt;@Nullable&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;https://jspecify.dev/docs/api/org/jspecify/annotations/NonNull.html&quot;&gt;&lt;code&gt;@NonNull&lt;/code&gt;&lt;/a&gt; on types not present in the classpath.&lt;/p&gt;
-&lt;p&gt;There are ongoing discussions and work to hopefully remove this side effect by restoring javac lazy behavior to not trigger such error, or if not possible to downgrade it to a warning with some way to suppress it. See &lt;a href=&quot;https://github.com/openjdk/jdk/pull/28018&quot;&gt;https://github.com/openjdk/jdk/pull/28018&lt;/a&gt; for more details.&lt;/p&gt;
-&lt;h3 id=&quot;suppresswarningsnullness&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#suppresswarningsnullness&quot; aria-label=&quot;suppresswarningsnullness permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;@SuppressWarnings(¡°nullness¡±)&lt;/h3&gt;
-&lt;p&gt;There are ongoing discussions at the JSpecify working group to standardize a tooling-neutral way to suppress nullability checks, when for example they are not relevant. You can track &lt;a href=&quot;https://github.com/jspecify/jspecify/issues/55&quot;&gt;https://github.com/jspecify/jspecify/issues/55&lt;/a&gt; related issue.&lt;/p&gt;
-&lt;h3 id=&quot;nullaway-refinements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#nullaway-refinements&quot; aria-label=&quot;nullaway refinements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;NullAway refinements&lt;/h3&gt;
-&lt;p&gt;NullAway JSpecify mode is still evolving, so be sure to check or report &lt;a href=&quot;https://github.com/uber/NullAway/issues?q=is%3Aissue%20state%3Aopen%20label%3Ajspecify&quot;&gt;related issues&lt;/a&gt;. For example with Spring or Reactor APIs using lambdas, you may hit &lt;a href=&quot;https://github.com/uber/NullAway/issues/1290&quot;&gt;NullAway#1290&lt;/a&gt;. For now, you can suppress related warnings with &lt;code&gt;@SuppressWarnings(&quot;NullAway&quot;)&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;We are also expecting refinements on JDK APIs nullability, see &lt;a href=&quot;https://github.com/uber/NullAway/issues/950&quot;&gt;NullAway#950&lt;/a&gt; related issue.&lt;/p&gt;
-&lt;h2 id=&quot;conclusion&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#conclusion&quot; aria-label=&quot;conclusion permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;What I like with those null-safety improvements is that they led to a lot of refinements in the Spring codebases that increased its quality and robustness. And you are free to decide how much you want to leverage them. You can just turn-off related warnings if you don&apos;t care, fix them in your IDE to reduce the risk of &lt;code&gt;NullPointerException&lt;/code&gt;, or go as far as making your application null-safe.&lt;/p&gt;
-&lt;p&gt;Also, as shown by Spring work, this is actionable on existing projects without breaking your APIs, as you will conceptually augment current types with nullability information.&lt;/p&gt;
-&lt;p&gt;We hope to see more open source libraries adopting JSpecify as well, and we think that JSpecify adoption will help the JVM ecosystem and your applications to be prepared for a future support of &lt;a href=&quot;https://openjdk.org/jeps/8303099&quot;&gt;Null-Restricted and Nullable Types&lt;/a&gt;, which may require several years to materialize in practice (availability as a non-preview feature, library upgrading their baseline, applications doing as well) with additional runtime efficiency benefits.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring AI 1.1 GA Released]]></title><link>https://spring.io/blog/2025/11/12/spring-ai-1-1-GA-released</link><guid isPermaLink="true">https://spring.io/blog/2025/11/12/spring-ai-1-1-GA-released</guid><dc:creator><![CDATA[markpollack]]></dc:creator><pubDate>Wed, 12 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the Spring AI team, I&apos;m pleased to announce the general availability of Spring AI 1.1.0!&lt;/p&gt;
-&lt;p&gt;Spring AI 1.1 brings Model Context Protocol integration, advanced AI capabilities, and expanded model provider support to the Spring ecosystem. The 1.1 development cycle includes over 850 improvements, bug fixes, and documentation updates.&lt;/p&gt;
-&lt;p&gt;We extend our sincere thanks to the community contributors, partner organizations, and the broader Spring AI ecosystem for their invaluable contributions throughout this release cycle.&lt;/p&gt;
-&lt;h2 id=&quot;release-summary&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#release-summary&quot; aria-label=&quot;release summary permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Release Summary&lt;/h2&gt;
-&lt;p&gt;Spring AI 1.1.0 includes substantial improvements across all areas:&lt;/p&gt;
+&lt;h3 id=&quot;spring-cloud-consul&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-consul&quot; aria-label=&quot;spring cloud consul permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Consul&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Over 850 total improvements&lt;/strong&gt; across M1, M2, M3, M4, and RC1 (&lt;a href=&quot;https://github.com/spring-projects/spring-ai/releases/tag/v1.1.0&quot;&gt;GitHub Release&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;354 enhancements&lt;/strong&gt; including major new features and integrations&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;241 bug fixes&lt;/strong&gt; for improved stability and reliability&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;100 documentation improvements&lt;/strong&gt; with new guides and examples&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;23 security updates&lt;/strong&gt; and dependency upgrades&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Contributions from the community&lt;/strong&gt; spanning multiple organizations and open source projects&lt;/li&gt;
+&lt;li&gt;Replaced &lt;code&gt;ewcid-api&lt;/code&gt; with a non-blocking interface client (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-consul/issues/475&quot;&gt;#475&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&quot;model-context-protocol&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#model-context-protocol&quot; aria-label=&quot;model context protocol permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Model Context Protocol&lt;/h2&gt;
-&lt;p&gt;The Model Context Protocol (MCP) represents the most significant feature set improvement to Spring AI 1.1. Spring AI provides Spring Boot auto-configuration and a comprehensive annotation-based programming model for MCP integration.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/mcp.html&quot;&gt;MCP Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;spring-ai-mcp-features&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai-mcp-features&quot; aria-label=&quot;spring ai mcp features permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI MCP Features&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Annotation-Based Programming Model:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@McpTool
-public String getCurrentWeather(String location) {
-    // Tool implementation
-}
-
-@McpResource
-public String getDatabaseSchema() {
-    // Resource implementation
-}
-
-@McpPrompt
-public String generateSqlQuery(String userIntent) {
-    // Prompt template implementation
-}
+&lt;h3 id=&quot;spring-cloud-gateway&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-gateway&quot; aria-label=&quot;spring cloud gateway permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Spring Cloud Gateway now has null-safety annotations for all public API classes with JSpecify (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/issues/3953&quot;&gt;#3953&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Retry filter based on Spring Framework&apos;s retry functionality (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/pull/3970&quot;&gt;#3970&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-commons&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-commons&quot; aria-label=&quot;spring cloud commons permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Commons&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Spring Cloud Commons now has null-safety annotations for all public API classes with JSpecify (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-commons/pull/1594&quot;&gt;#1594&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-vault&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-vault&quot; aria-label=&quot;spring cloud vault permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Vault&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Uses Spring Vault RC2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-stream&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-stream&quot; aria-label=&quot;spring cloud stream permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Stream&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Support for caching and logging control options for KTable materialization&lt;/li&gt;
+&lt;li&gt;Support for consumer priority support in Rabbit binder properties&lt;/li&gt;
+&lt;li&gt;Migration to Jackson 3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-config&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-config&quot; aria-label=&quot;spring cloud config permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Config&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Transition to use Jackson 3 (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-config/pull/3131&quot;&gt;#3131&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-contract&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-contract&quot; aria-label=&quot;spring cloud contract permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Contract&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Removed support for REST Assured due to &lt;a href=&quot;https://github.com/spring-projects/spring-restdocs/issues/1000&quot;&gt;support being dropped in Spring REST Docs&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-kubernetes&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-kubernetes&quot; aria-label=&quot;spring cloud kubernetes permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Kubernetes&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Leader election info contributor can now be disabled by setting &lt;code&gt;management.info.leader.enabled=false&lt;/code&gt; (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-kubernetes/issues/2085&quot;&gt;#2085&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-circuitbreaker&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-circuitbreaker&quot; aria-label=&quot;spring cloud circuitbreaker permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Circuitbreaker&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A new module has been added with a Spring Cloud Circuitbreaker implementation using the new &lt;a href=&quot;https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes#resilience-features-retrytemplate-retryable-concurrencylimit&quot;&gt;resilience support in Spring Framework 7.0.0&lt;/a&gt;. (#&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-circuitbreaker/pull/256&quot;&gt;256&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The module &lt;code&gt;spring-cloud-circuitbreaker-spring-retry&lt;/code&gt; has been placed in maintenance only mode and will be removed when &lt;a href=&quot;https://github.com/spring-projects/spring-retry&quot;&gt;Spring Retry&lt;/a&gt; is no longer supported.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following modules were updated as part of 2025.1.0-RC1:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Module&lt;/th&gt;
+&lt;th&gt;Version&lt;/th&gt;
+&lt;th&gt;Issues&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Function&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-function/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Zookeeper&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-zookeeper/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Consul&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-consul/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Gateway&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Bus&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-bus/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Commons&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-commons/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Vault&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-vault/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Stream&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-stream/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Openfeign&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-openfeign/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Netflix&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-netflix/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Config&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-config/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Build&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-build/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Contract&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-contract/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Starter Build&lt;/td&gt;
+&lt;td&gt;2025.1.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-starter-build/releases/tag/v2025.1.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Task&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-task/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Kubernetes&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-kubernetes/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Circuitbreaker&lt;/td&gt;
+&lt;td&gt;5.0.0-RC1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-circuitbreaker/releases/tag/v5.0.0-RC1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;As always, we welcome feedback on &lt;a href=&quot;https://github.com/spring-cloud/&quot;&gt;GitHub&lt;/a&gt;, on &lt;a href=&quot;https://gitter.im/spring-cloud/spring-cloud&quot;&gt;Gitter&lt;/a&gt;, on &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-cloud&quot;&gt;Stack Overflow&lt;/a&gt;, or on &lt;a href=&quot;https://twitter.com/SpringCloud&quot;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To get started with Maven with a BOM (dependency management only):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;    &amp;#x3C;repositories&gt;
+        &amp;#x3C;repository&gt;
+            &amp;#x3C;id&gt;spring-milestones&amp;#x3C;/id&gt;
+            &amp;#x3C;name&gt;Spring Milestones&amp;#x3C;/name&gt;
+            &amp;#x3C;url&gt;https://repo.spring.io/milestone&amp;#x3C;/url&gt;
+            &amp;#x3C;snapshots&gt;
+                &amp;#x3C;enabled&gt;false&amp;#x3C;/enabled&gt;
+            &amp;#x3C;/snapshots&gt;
+        &amp;#x3C;/repository&gt;
+    &amp;#x3C;/repositories&gt;
+&amp;#x3C;dependencyManagement&gt;
+    &amp;#x3C;dependencies&gt;
+        &amp;#x3C;dependency&gt;
+            &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+            &amp;#x3C;artifactId&gt;spring-cloud-dependencies&amp;#x3C;/artifactId&gt;
+            &amp;#x3C;version&gt;2025.1.0-RC1&amp;#x3C;/version&gt;
+            &amp;#x3C;type&gt;pom&amp;#x3C;/type&gt;
+            &amp;#x3C;scope&gt;import&amp;#x3C;/scope&gt;
+        &amp;#x3C;/dependency&gt;
+    &amp;#x3C;/dependencies&gt;
+&amp;#x3C;/dependencyManagement&gt;
+&amp;#x3C;dependencies&gt;
+    &amp;#x3C;dependency&gt;
+        &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+        &amp;#x3C;artifactId&gt;spring-cloud-starter-config&amp;#x3C;/artifactId&gt;
+    &amp;#x3C;/dependency&gt;
+    &amp;#x3C;dependency&gt;
+        &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+        &amp;#x3C;artifactId&gt;spring-cloud-starter-netflix-eureka-client&amp;#x3C;/artifactId&gt;
+    &amp;#x3C;/dependency&gt;
+    ...
+&amp;#x3C;/dependencies&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;Multiple Transport Options:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;STDIO transport for local process communication&lt;/li&gt;
-&lt;li&gt;HTTP SSE (Server-Sent Events) for web-based integrations&lt;/li&gt;
-&lt;li&gt;Streamable HTTP for stateful session management with resumability&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Spring Boot Auto-Configuration:&lt;/strong&gt;
-Multiple specialized starters support both client and server implementations across WebFlux, WebMVC, and Servlet environments. Docker Compose and Testcontainers integration enables containerized MCP gateway deployments.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Security Integration:&lt;/strong&gt;
-Security documentation covers OAuth2 integration patterns for securing MCP servers. Read more in Daniel Garnier-Moiroux&apos;s blog post: &lt;a href=&quot;https://spring.io/blog/2025/09/30/spring-ai-mcp-server-security&quot;&gt;Securing MCP Servers with Spring AI&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Getting Started:&lt;/strong&gt;
-Christian Tzolov&apos;s blog post: &lt;a href=&quot;https://spring.io/blog/2025/09/16/spring-ai-mcp-intro-blog&quot;&gt;Connect Your AI to Everything: Spring AI&apos;s MCP Boot Starters&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;For a deep technical dive, watch the &lt;a href=&quot;https://www.youtube.com/watch?v=EgKsRsx1-HM&quot;&gt;Beyond local tools: Deep dive into MCP&lt;/a&gt; presentation by James Ward and Maximilian Schellhorn.&lt;/p&gt;
-&lt;h2 id=&quot;prompt-caching&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#prompt-caching&quot; aria-label=&quot;prompt caching permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Prompt Caching&lt;/h2&gt;
-&lt;p&gt;Spring AI 1.1 adds prompt caching support for Anthropic Claude and AWS Bedrock, reducing costs by up to 90% while improving response times.&lt;/p&gt;
-&lt;h3 id=&quot;anthropic-claude-prompt-caching&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#anthropic-claude-prompt-caching&quot; aria-label=&quot;anthropic claude prompt caching permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Anthropic Claude Prompt Caching&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/anthropic-chat.html&quot;&gt;Anthropic Claude Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Spring AI supports five cache strategies for Anthropic Claude:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;NONE&lt;/strong&gt;: No caching (default)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;SYSTEM_ONLY&lt;/strong&gt;: Cache system messages&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;TOOLS_ONLY&lt;/strong&gt;: Cache tool definitions&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;SYSTEM_AND_TOOLS&lt;/strong&gt;: Cache system messages and tool definitions&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;CONVERSATION_HISTORY&lt;/strong&gt;: Incremental caching following Anthropic&apos;s best practices&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Cache time-to-live (TTL) options include 5-minute and 1-hour caching, with automatic cache management and eligibility tracking.&lt;/p&gt;
-&lt;p&gt;Soby Chacko&apos;s detailed guide covers implementation patterns: &lt;a href=&quot;https://spring.io/blog/2025/10/27/spring-ai-anthropic-prompt-caching-blog&quot;&gt;Prompt Caching Support in Spring AI with Anthropic Claude&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=&quot;aws-bedrock-prompt-caching&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#aws-bedrock-prompt-caching&quot; aria-label=&quot;aws bedrock prompt caching permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;AWS Bedrock Prompt Caching&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/bedrock.html&quot;&gt;AWS Bedrock Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;AWS Bedrock Converse API now supports prompt caching for Claude and Nova models, providing similar cost optimization benefits for applications deployed on AWS infrastructure.&lt;/p&gt;
-&lt;p&gt;Implementation details are available in: &lt;a href=&quot;https://spring.io/blog/2025/10/30/spring-ai-bedrock-prompt-caching-blog&quot;&gt;AWS Bedrock Prompt Caching Support in Spring AI&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;advanced-ai-capabilities&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#advanced-ai-capabilities&quot; aria-label=&quot;advanced ai capabilities permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Advanced AI Capabilities&lt;/h2&gt;
-&lt;h3 id=&quot;reasoning-and-thinking-mode-support&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#reasoning-and-thinking-mode-support&quot; aria-label=&quot;reasoning and thinking mode support permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Reasoning and Thinking Mode Support&lt;/h3&gt;
-&lt;p&gt;Spring AI 1.1 provides native support for AI models with reasoning capabilities across multiple providers:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Ollama&lt;/strong&gt;: Thinking mode support for reasoning models with effort parameter control via OpenAI compatibility&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;ZhipuAI&lt;/strong&gt;: &lt;code&gt;thinking&lt;/code&gt; and &lt;code&gt;response_format&lt;/code&gt; parameter support for GLM models&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Anthropic&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/anthropic-chat.html#_thinking_extended_reasoning&quot;&gt;docs&lt;/a&gt;): Streaming thinking events with access to reasoning chains&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;OpenAI&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/openai-chat.html#_reasoning_content&quot;&gt;docs&lt;/a&gt;): Access to reasoning content and custom parameters&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The &lt;code&gt;ReasoningContent&lt;/code&gt; API enables applications to inspect and utilize the model&apos;s reasoning process.&lt;/p&gt;
-&lt;h3 id=&quot;recursive-advisors-for-self-improving-ai-agents&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#recursive-advisors-for-self-improving-ai-agents&quot; aria-label=&quot;recursive advisors for self improving ai agents permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Recursive Advisors for Self-Improving AI Agents&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/advisors.html&quot;&gt;Advisors Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The new recursive advisor feature enables advisors to call other advisors in chains, creating sophisticated multi-step AI workflows. Two built-in recursive advisor implementations provide pre-configured patterns for common use cases, with configurable observations for monitoring and debugging.&lt;/p&gt;
-&lt;p&gt;This feature enables building self-improving AI agents that can refine their own outputs through iterative processing. Christian Tzolov&apos;s blog post demonstrates the pattern: &lt;a href=&quot;https://spring.io/blog/2025/11/04/spring-ai-recursive-advisors&quot;&gt;Create Self-Improving AI Agents Using Spring AI Recursive Advisors&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The recursive advisor pattern also enables implementing LLM-as-a-Judge evaluation systems, as detailed in: &lt;a href=&quot;https://spring.io/blog/2025/11/10/spring-ai-llm-as-judge-blog-post&quot;&gt;LLM Response Evaluation with Spring AI: Building LLM-as-a-Judge Using Recursive Advisors&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;expanded-model-provider-ecosystem&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#expanded-model-provider-ecosystem&quot; aria-label=&quot;expanded model provider ecosystem permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Expanded Model Provider Ecosystem&lt;/h2&gt;
-&lt;p&gt;Spring AI 1.1 broadens model provider support with new integrations and enhanced capabilities:&lt;/p&gt;
-&lt;h3 id=&quot;new-provider-integrations&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#new-provider-integrations&quot; aria-label=&quot;new provider integrations permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;New Provider Integrations&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Google GenAI SDK Integration:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/google-genai-chat.html&quot;&gt;Google GenAI Chat Documentation&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/embeddings/google-genai-embeddings.html&quot;&gt;Google GenAI Embeddings Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Native support for Gemini Pro, Gemini 1.5 Pro, and Gemini 2.0 Flash models&lt;/li&gt;
-&lt;li&gt;Dual authentication: API keys and Google Cloud credentials&lt;/li&gt;
-&lt;li&gt;Chat and text embedding capabilities&lt;/li&gt;
-&lt;li&gt;Cached Content API support&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/ddobrin&quot;&gt;Dan Dobrin (@ddobrin)&lt;/a&gt; from Google for contributing this integration.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;ElevenLabs Text-to-Speech:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/audio/speech/elevenlabs-speech.html&quot;&gt;ElevenLabs Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Streaming audio generation&lt;/li&gt;
-&lt;li&gt;Multiple voice options&lt;/li&gt;
-&lt;li&gt;Support for various audio formats&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Thanks to &lt;a href=&quot;https://github.com/apappascs&quot;&gt;Alexandros Pappas (@apappascs)&lt;/a&gt; for contributing this integration.&lt;/p&gt;
-&lt;p&gt;Both OpenAI and ElevenLabs implement the &lt;code&gt;TextToSpeechModel&lt;/code&gt; interface (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/audio/speech.html&quot;&gt;docs&lt;/a&gt;), providing a consistent model-level API across providers.&lt;/p&gt;
-&lt;h3 id=&quot;enhanced-model-support&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#enhanced-model-support&quot; aria-label=&quot;enhanced model support permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Enhanced Model Support&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;OpenAI:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/openai-chat.html&quot;&gt;OpenAI Chat Documentation&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/audio/transcriptions/openai-transcriptions.html&quot;&gt;OpenAI Audio Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;GPT-5 model family support (gpt-5, gpt-5-mini, gpt-5-nano) - Thanks to &lt;a href=&quot;https://github.com/apappascs&quot;&gt;Alexandros Pappas (@apappascs)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;File API (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/openai-chat.html#_file_api&quot;&gt;docs&lt;/a&gt;) for upload and management - Thanks to &lt;a href=&quot;https://github.com/sunyuhan1998&quot;&gt;Sun Yuhan (@sunyuhan1998)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Reasoning content access&lt;/li&gt;
-&lt;li&gt;Expanded TTS and transcription models - Thanks to &lt;a href=&quot;https://github.com/apappascs&quot;&gt;Alexandros Pappas (@apappascs)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Anthropic Claude:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/anthropic-chat.html&quot;&gt;Anthropic Claude Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Latest Claude models: Sonnet 4.5, Opus 4.1&lt;/li&gt;
-&lt;li&gt;Citations API for source attribution and traceability&lt;/li&gt;
-&lt;li&gt;Tool choice support for controlling function calling - Thanks to &lt;a href=&quot;https://github.com/adase11&quot;&gt;Austin Dase (@adase11)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Enhanced prompt caching with cache management - Thanks to &lt;a href=&quot;https://github.com/adase11&quot;&gt;Austin Dase (@adase11)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Mistral AI:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/mistralai-chat.html&quot;&gt;Mistral AI Chat Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;OCR API (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/mistralai-chat.html#_ocr&quot;&gt;docs&lt;/a&gt;) integration for document and image text extraction - Thanks to &lt;a href=&quot;https://github.com/apappascs&quot;&gt;Alexandros Pappas (@apappascs)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Codestral Embed model support - Thanks to &lt;a href=&quot;https://github.com/nicolaskrier&quot;&gt;Nicolas Krier (@nicolaskrier)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Builder pattern consistency - Thanks to &lt;a href=&quot;https://github.com/jasonparallel&quot;&gt;Jason Smith (@jasonparallel)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;ZhipuAI:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat/zhipuai-chat.html&quot;&gt;ZhipuAI Chat Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;GLM-4.6 model support and international site integration - Thanks to &lt;a href=&quot;https://github.com/luyunkui95&quot;&gt;YunKui Lu (@luyunkui95)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;GLM-4.5 and GLM-Z1 model support - Thanks to &lt;a href=&quot;https://github.com/eeaters&quot;&gt;YuJie Wan (@eeaters)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Thinking mode capabilities - Thanks to &lt;a href=&quot;https://github.com/luyunkui95&quot;&gt;YunKui Lu (@luyunkui95)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;vector-stores-chat-memory-and-observability&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#vector-stores-chat-memory-and-observability&quot; aria-label=&quot;vector stores chat memory and observability permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Vector Stores, Chat Memory, and Observability&lt;/h2&gt;
-&lt;h3 id=&quot;vector-store-enhancements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#vector-store-enhancements&quot; aria-label=&quot;vector store enhancements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Vector Store Enhancements&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs.html&quot;&gt;Vector Database Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Spring AI 1.1 includes improvements for retrieval-augmented generation (RAG) applications:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;MariaDB Vector Store&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/mariadb.html&quot;&gt;docs&lt;/a&gt;): Full integration with similarity scoring - Thanks to &lt;a href=&quot;https://github.com/tilman&quot;&gt;Tilman Holube (@tilman)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;OpenSearch Approximate k-NN&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/opensearch.html&quot;&gt;docs&lt;/a&gt;): Performance-optimized approximate search - Thanks to &lt;a href=&quot;https://github.com/JM-Lab&quot;&gt;Jemin Huh (@JM-Lab)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;GemFire Metadata Filtering&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/gemfire.html&quot;&gt;docs&lt;/a&gt;): Advanced filtering for similarity searches - Thanks to &lt;a href=&quot;https://github.com/jason.huynh&quot;&gt;Jason Huynh (@jason.huynh)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Weaviate Configuration&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs/weaviate.html&quot;&gt;docs&lt;/a&gt;): Enhanced field customization (meta prefix, content field, embedding field) - Thanks to &lt;a href=&quot;https://github.com/dev-jonghoonpark&quot;&gt;Jonghoon Park (@dev-jonghoonpark)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;VectorStoreRetriever Interface&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/vectordbs.html#_vectorstoreretriever_interface&quot;&gt;docs&lt;/a&gt;): Read-only abstraction following the principle of least privilege&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;chat-memory-storage-options&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#chat-memory-storage-options&quot; aria-label=&quot;chat memory storage options permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Chat Memory Storage Options&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chatmemory.html&quot;&gt;Chat Memory Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Multiple conversation storage options:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;MongoDB Chat Memory Repository&lt;/strong&gt;: MongoDB integration for conversation history - Thanks to &lt;a href=&quot;https://github.com/deejay1&quot;&gt;¨©ukasz Jerna? (@deejay1)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Oracle JDBC ChatMemoryRepository&lt;/strong&gt;: Oracle database support with H2 and SQLite dialects - Thanks to &lt;a href=&quot;https://github.com/guanxuc&quot;&gt;guanxu (@guanxuc)&lt;/a&gt; and &lt;a href=&quot;https://github.com/fanxt0218&quot;&gt;fanxt0218 (@fanxt0218)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Azure Cosmos DB Chat Memory&lt;/strong&gt;: Azure integration for globally distributed deployments - Thanks to &lt;a href=&quot;https://github.com/TheovanKraay&quot;&gt;Theo van Kraay (@TheovanKraay)&lt;/a&gt; from Microsoft&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;observability-and-monitoring&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#observability-and-monitoring&quot; aria-label=&quot;observability and monitoring permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Observability and Monitoring&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/observability/index.html&quot;&gt;Observability Documentation&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Micrometer Observability enhancements:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Observation context enhancements for better context propagation - Thanks to &lt;a href=&quot;https://github.com/ThomasVitale&quot;&gt;Thomas Vitale (@ThomasVitale)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Chat client completion logging for debugging - Thanks to &lt;a href=&quot;https://github.com/jonatan-ivanov&quot;&gt;Jonatan Ivanov (@jonatan-ivanov)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Configurable advisor observations&lt;/li&gt;
-&lt;li&gt;Metrics documentation with Prometheus and OpenTelemetry mapping guidance - Thanks to &lt;a href=&quot;https://github.com/heechann&quot;&gt;heechann (@heechann)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;other-improvements&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#other-improvements&quot; aria-label=&quot;other improvements permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Other Improvements&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;MCP Java SDK Evolution&lt;/strong&gt;: Advanced from v0.10.0 to v0.15.0 during the 1.1 development cycle&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Document Processing&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/etl-pipeline.html#_markdowndocumentreader&quot;&gt;docs&lt;/a&gt;): MarkdownDocumentReader with batch processing, enhanced multimodal PDF support&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Developer Experience&lt;/strong&gt;: Unified builder patterns across EmbeddingOptions and ChatOptions&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Network Reliability&lt;/strong&gt;: Automatic retry configuration for distributed deployments&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Security Documentation&lt;/strong&gt;: MCP security reference with OAuth2 patterns&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Example Repository&lt;/strong&gt;: 37 total modules with 24 featuring integration tests - &lt;a href=&quot;https://github.com/spring-projects/spring-ai-examples&quot;&gt;Spring AI Examples&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;community-and-ecosystem&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#community-and-ecosystem&quot; aria-label=&quot;community and ecosystem permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Community and Ecosystem&lt;/h2&gt;
-&lt;h3 id=&quot;spring-ai-community-github-organization&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai-community-github-organization&quot; aria-label=&quot;spring ai community github organization permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI Community GitHub Organization&lt;/h3&gt;
-&lt;p&gt;The new &lt;a href=&quot;https://github.com/spring-ai-community&quot;&gt;Spring AI Community GitHub Organization&lt;/a&gt; provides a home for community-driven projects that extend Spring AI.&lt;/p&gt;
-&lt;p&gt;Read the announcement: &lt;a href=&quot;https://spring.io/blog/2025/10/07/spring-ai-community-announcement&quot;&gt;Introducing the Spring AI Community GitHub Organization&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=&quot;spring-ai-agents-and-bench&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai-agents-and-bench&quot; aria-label=&quot;spring ai agents and bench permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI Agents and Bench&lt;/h3&gt;
-&lt;p&gt;New projects for building and evaluating AI agents:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Spring AI Agents&lt;/strong&gt; (&lt;a href=&quot;https://springaicommunity.mintlify.app/projects/incubating/spring-ai-agents&quot;&gt;docs&lt;/a&gt;): Framework for building agentic coding tools and AI agents&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Spring AI Bench&lt;/strong&gt; (&lt;a href=&quot;https://springaicommunity.mintlify.app/projects/incubating/spring-ai-bench&quot;&gt;docs&lt;/a&gt;): Benchmarking and evaluation toolkit&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Learn more: &lt;a href=&quot;https://spring.io/blog/2025/10/28/agents-and-benchmarks&quot;&gt;Introducing Spring AI Agents and Spring AI Bench&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=&quot;conference-talks-and-tutorials&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#conference-talks-and-tutorials&quot; aria-label=&quot;conference talks and tutorials permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Conference Talks and Tutorials&lt;/h3&gt;
-&lt;p&gt;The Spring AI community has been sharing knowledge through presentations and tutorials:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=yQQEnXRMvUA&quot;&gt;Modular RAG Architectures with Java and Spring AI&lt;/a&gt; by Thomas Vitale at Spring I/O 2025&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=tEyM-TZeVqM&quot;&gt;Devnexus 2025 - Spring AI&lt;/a&gt; with Dr. Mark Pollack and Josh Long&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=FzLABAppJfM&amp;#x26;list=PLZV0a2jwt22uoDm3LNDFvN6i2cAVU_HTH&amp;#x26;index=25&quot;&gt;Spring AI Complete Tutorial&lt;/a&gt; by Dan Vega&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&quot;mcp-java-sdk-contributions&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#mcp-java-sdk-contributions&quot; aria-label=&quot;mcp java sdk contributions permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;MCP Java SDK Contributions&lt;/h3&gt;
-&lt;p&gt;The MCP Java SDK represents a collaborative effort across the Java ecosystem. Contributors to the MCP Java SDK during the 1.1 development cycle include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Broadcom&lt;/strong&gt;: &lt;a href=&quot;https://github.com/tzolov&quot;&gt;Christian Tzolov (@tzolov)&lt;/a&gt;, &lt;a href=&quot;https://github.com/Kehrlann&quot;&gt;Daniel Garnier-Moiroux (@Kehrlann)&lt;/a&gt;, &lt;a href=&quot;https://github.com/chemicL&quot;&gt;Dariusz J?drzejczyk (@chemicL)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Oracle&lt;/strong&gt;: &lt;a href=&quot;https://github.com/graemerocher&quot;&gt;Graeme Rocher (@graemerocher)&lt;/a&gt;, &lt;a href=&quot;https://github.com/sdelamo&quot;&gt;Sergio del Amo (@sdelamo)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Confluent&lt;/strong&gt;: &lt;a href=&quot;https://github.com/pascalconfluent&quot;&gt;Pascal Vantrepote (@pascalconfluent)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;AWS&lt;/strong&gt;: &lt;a href=&quot;https://github.com/pantanurag555&quot;&gt;Anurag Pant (@pantanurag555)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Google&lt;/strong&gt;: &lt;a href=&quot;https://github.com/zhouyming&quot;&gt;Yanming Zhou (@zhouyming)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Deutsche Bank&lt;/strong&gt;: &lt;a href=&quot;https://github.com/bedrin&quot;&gt;Dmitry Bedrin (@bedrin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Open Source Community&lt;/strong&gt;: &lt;a href=&quot;https://github.com/He-Pin&quot;&gt;He-Pin (@He-Pin)&lt;/a&gt; (Apache Pekko PMC), &lt;a href=&quot;https://github.com/leehaut&quot;&gt;lance leehaut (@leehaut)&lt;/a&gt;, &lt;a href=&quot;https://github.com/JunJieLiu51520&quot;&gt;Liujunjie (@JunJieLiu51520)&lt;/a&gt;, &lt;a href=&quot;https://github.com/arcaputo3&quot;&gt;Richie Caputo (@arcaputo3)&lt;/a&gt;, &lt;a href=&quot;https://github.com/zhangjingcn&quot;&gt;shaoyin.zj (@zhangjingcn)&lt;/a&gt;, &lt;a href=&quot;https://github.com/Zizo-Vi&quot;&gt;Zizo-Vi (@Zizo-Vi)&lt;/a&gt;, &lt;a href=&quot;https://github.com/valuesource&quot;&gt;@valuesource&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;getting-started-with-spring-ai-11&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#getting-started-with-spring-ai-11&quot; aria-label=&quot;getting started with spring ai 11 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Getting Started with Spring AI 1.1&lt;/h2&gt;
-&lt;p&gt;The &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/&quot;&gt;Spring AI 1.1 documentation&lt;/a&gt; includes:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;MCP Getting Started Guide&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/guides/getting-started-mcp.html&quot;&gt;docs&lt;/a&gt;): Step-by-step introduction to Model Context Protocol integration&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Provider Documentation&lt;/strong&gt; (&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chat.html&quot;&gt;docs&lt;/a&gt;): Complete guides for all supported AI providers&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Example Repository&lt;/strong&gt; (&lt;a href=&quot;https://github.com/spring-projects/spring-ai-examples&quot;&gt;Spring AI Examples&lt;/a&gt;): Working examples with integration tests&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;whats-next&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#whats-next&quot; aria-label=&quot;whats next permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;What&apos;s Next&lt;/h2&gt;
-&lt;p&gt;We will be keeping the main branch on 1.1.1-SNAPSHOT in anticipation of bug-fixing PRs over the next few weeks.  Then we will shift the main branch to 2.0.0-SNAPSHOT and begin support for Spring Framework 7 and Spring Boot 4.0.&lt;/p&gt;
-&lt;h2 id=&quot;resources&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#resources&quot; aria-label=&quot;resources permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Resources&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/projects/spring-ai&quot;&gt;Project Page&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-ai&quot;&gt;GitHub Repository&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-ai/issues&quot;&gt;Issues&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/&quot;&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-ai&quot;&gt;Stack Overflow&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;contributors&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#contributors&quot; aria-label=&quot;contributors permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Contributors&lt;/h2&gt;
-&lt;p&gt;? We thank all the contributors who made this release possible. Here is the collective list of contributors since the 1.0 GA release.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/apappascs&quot;&gt;Alexandros Pappas (apappascs)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/andrei.sumin&quot;&gt;Andrei Sumin (andrei.sumin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ashakirin&quot;&gt;ashakirin (ashakirin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/asw12&quot;&gt;asw12 (asw12)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/adase11&quot;&gt;Austin Dase (adase11)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/kirkster96&quot;&gt;Cameron Kirk (kirkster96)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/csbiy&quot;&gt;chani (csbiy)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/cho&quot;&gt;cho-thinkfree-com (cho)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/tzolov&quot;&gt;Christian Tzolov (tzolov)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/cmiles74&quot;&gt;Christopher Miles (cmiles74)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/imzhouchen&quot;&gt;codeboyzhou (imzhouchen)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ddobrin&quot;&gt;Dan Dobrin (ddobrin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Kehrlann&quot;&gt;Daniel Garnier-Moiroux (Kehrlann)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/chemicL&quot;&gt;Dariusz J?drzejczyk (chemicL)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/dafriz&quot;&gt;David Frizelle (dafriz)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/devbulchandani&quot;&gt;Dev Bulchandani (devbulchandani)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/dmitrii.chechetkin&quot;&gt;Dmitrii Chechetkin (dmitrii.chechetkin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/eddu.melendez&quot;&gt;Edd? Mel?ndez (eddu.melendez)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ericbottard&quot;&gt;Eric Bottard (ericbottard)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/fanxt0218&quot;&gt;fanxt0218 (fanxt0218)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ForteScarlet&quot;&gt;Forte Scarlet (ForteScarlet)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/garethjevans&quot;&gt;Gareth Evans (garethjevans)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/guanxuc&quot;&gt;guanxu (guanxuc)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/HeeChanN&quot;&gt;heechann (HeeChanN)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Hyeri1ee&quot;&gt;Hyeri1ee (Hyeri1ee)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/loveysuby&quot;&gt;Hyoseop Song (loveysuby)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/HyunSangHan&quot;&gt;Hyunsang Han (HyunSangHan)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ilayaperumalg&quot;&gt;Ilayaperumal Gopinathan (ilayaperumalg)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ielatif&quot;&gt;Issam El-atif (ielatif)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jacquicollier2-eng&quot;&gt;jacquicollier2-eng (jacquicollier2-eng)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jamesward&quot;&gt;James Ward (jamesward)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/emopti-jrufer&quot;&gt;Jared Rufer (emopti-jrufer)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jason.huynh&quot;&gt;Jason Huynh (jason.huynh)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jasonparallel&quot;&gt;Jason Smith (jasonparallel)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/JM-Lab&quot;&gt;Jemin Huh (JM-Lab)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jiafu1115&quot;&gt;Jian (jiafu1115)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jinlee1703&quot;&gt;Jinwoo Lee (jinlee1703)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jonatan-ivanov&quot;&gt;Jonatan Ivanov (jonatan-ivanov)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/joshlong&quot;&gt;Josh Long (joshlong)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/kuntal1461&quot;&gt;kuntal1461 (kuntal1461)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/leehaut&quot;&gt;lance (leehaut)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/l-trotta&quot;&gt;Laura Trotta (l-trotta)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/bytesgo&quot;&gt;leeyazhou (bytesgo)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/bert825_work&quot;&gt;Li Huagang-?Û¯?å¯ (bert825_work)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/eeaters&quot;&gt;Link (eeaters)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/little-huang&quot;&gt;little_huang (little-huang)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/liugddx&quot;&gt;liugddx (liugddx)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/markpollack&quot;&gt;Mark Pollack (markpollack)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/mkjensen&quot;&gt;Martin Kamp Jensen (mkjensen)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/MartinDai&quot;&gt;MartinDai (MartinDai)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/wilocu&quot;&gt;Mattia Pasetto (wilocu)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Mo-Greene&quot;&gt;MoGreene (Mo-Greene)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/q-nathangrand&quot;&gt;NathanGrand (q-nathangrand)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/nguyen.trantrung&quot;&gt;Nguyen Tran (Mark) (nguyen.trantrung)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/nicolaskrier&quot;&gt;Nicolas Krier (nicolaskrier)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/nils&quot;&gt;Nils Breunese (nils)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/alxkm&quot;&gt;Oleksandr Klymenko (alxkm)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Hiosdra&quot;&gt;Oskar Drozda (Hiosdra)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/centrumek&quot;&gt;Pawel Potaczala (centrumek)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/philipithomas&quot;&gt;Philip I. Thomas (philipithomas)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/rafaelrddc&quot;&gt;Rafael Cunha (rafaelrddc)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/robinmayerhofer&quot;&gt;robinmayerhofer (robinmayerhofer)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/SandraAhlgrimm&quot;&gt;Sandra Ahlgrimm (SandraAhlgrimm)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/SenreySong&quot;&gt;Senrey_Song (SenreySong)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/seongm1n&quot;&gt;seongm1n (seongm1n)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/shahbazaamir&quot;&gt;Shahbaz Aamir (shahbazaamir)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/shishuiwuhen2009&quot;&gt;shishuiwuhen2009 (shishuiwuhen2009)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ai-afk&quot;&gt;SiBo Ai (ai-afk)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/sobychacko&quot;&gt;Soby Chacko (sobychacko)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/stuart.loxton&quot;&gt;Stuart Loxton (stuart.loxton)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/SuganthiThomas&quot;&gt;Suganthi Thomas (SuganthiThomas)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/sunyuhan1998&quot;&gt;Sun Yuhan (sunyuhan1998)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/theo.van&quot;&gt;Theo van Kraay (theo.van)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ThomasVitale&quot;&gt;Thomas Vitale (ThomasVitale)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/thjanssen&quot;&gt;Thorben Janssen (thjanssen)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/makingx&quot;&gt;Toshiaki Maki (makingx)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/ngocnhan-tran1996&quot;&gt;Tran Ngoc Nhan (ngocnhan-tran1996)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/vdm24&quot;&gt;vdm24 (vdm24)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/viacheslav-dobrynin&quot;&gt;Viacheslav Dobrynin (viacheslav-dobrynin)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/waldemar.panas&quot;&gt;Waldemar Panas (waldemar.panas)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/jamespud&quot;&gt;Wenli Tian (jamespud)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/nnam-droid12&quot;&gt;Willams (nnam-droid12)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/xfl12345&quot;&gt;xfl12345 (xfl12345)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/Yornii&quot;&gt;Yang Li (Yornii)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/yaner-here&quot;&gt;Yaner (yaner-here)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/quaff&quot;&gt;Yanming Zhou (quaff)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/eeaters&quot;&gt;YuJie Wan (eeaters)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/YunKuiLu&quot;&gt;YunKui Lu (YunKuiLu)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/deejay1&quot;&gt;¨©ukasz Jerna? (deejay1)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[LLM Response Evaluation with Spring AI: Building LLM-as-a-Judge Using Recursive Advisors]]></title><link>https://spring.io/blog/2025/11/10/spring-ai-llm-as-judge-blog-post</link><guid isPermaLink="true">https://spring.io/blog/2025/11/10/spring-ai-llm-as-judge-blog-post</guid><dc:creator><![CDATA[tzolov]]></dc:creator><pubDate>Mon, 10 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;img style=&quot;display: block; margin: 5px auto; padding: 10px;&quot; src=&quot;https://github.com/spring-io/spring-io-static/blob/main/blog/tzolov/20251031/llm-as-a-judge-blueprint-spring-ai-logo3.png?raw=true&quot; width=&quot;250&quot; align=&quot;left&quot;&gt;
-&lt;p&gt;The challenge of evaluating Large Language Model (LLM) outputs is critical for notoriously non-deterministic AI applications, especially as they move into production.&lt;/p&gt;
-&lt;p&gt;Traditional metrics like ROUGE and BLEU fall short when assessing the nuanced, contextual responses that modern LLMs produce.
-Human evaluation, while accurate, is expensive, slow, and doesn&apos;t scale.&lt;/p&gt;
-&lt;p&gt;Enter &lt;strong&gt;LLM-as-a-Judge&lt;/strong&gt; - a powerful technique that uses LLMs themselves to evaluate the quality of AI-generated content. Research &lt;a href=&quot;https://arxiv.org/pdf/2306.05685&quot;&gt;shows&lt;/a&gt; that sophisticated judge models can align with human judgment up to 85%, which is actually higher than human-to-human agreement (81%).&lt;/p&gt;
-&lt;p&gt;In this article, we&apos;ll explore how Spring AI&apos;s &lt;strong&gt;Recursive Advisors&lt;/strong&gt; provide an elegant framework for implementing LLM-as-a-Judge patterns, enabling you to build self-improving AI systems with automated quality control.
-To learn more about the Recursive Advisors API, check out our previous article: &lt;a href=&quot;https://spring.io/blog/2025/11/04/spring-ai-recursive-advisors&quot;&gt;Create Self-Improving AI Agents Using Spring AI Recursive Advisors&lt;/a&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;? Demo&lt;/strong&gt;: Find the full example implementation in the &lt;a href=&quot;https://github.com/spring-projects/spring-ai-examples/tree/main/advisors/evaluation-recursive-advisor-demo&quot;&gt;evaluation-recursive-advisor-demo&lt;/a&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;understanding-llm-as-a-judge&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#understanding-llm-as-a-judge&quot; aria-label=&quot;understanding llm as a judge permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Understanding LLM-as-a-Judge&lt;/h2&gt;
-&lt;p&gt;LLM-as-a-Judge is an evaluation method where Large Language Models assess the quality of outputs generated by other models or themselves. Instead of relying solely on human evaluators or traditional automated metrics, the LLM-as-a-Judge leverages an LLM to score, classify, or compare responses based on predefined criteria.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Why does it work?&lt;/strong&gt; Evaluation is fundamentally easier than generation. When you use an LLM as a judge, you&apos;re asking it to perform a simpler, more focused task (assessing specific properties of existing text) rather than the complex task of creating original content while balancing multiple constraints.
-A good analogy is that it&apos;s easier to critique than to create. Detecting problems is simpler than preventing them.&lt;/p&gt;
-&lt;p&gt;There are two primary LLM-as-a-judge &lt;strong&gt;evaluation patterns&lt;/strong&gt;:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Direct Assessment&lt;/strong&gt; (Point-wise Scoring): Judge evaluates individual responses, providing feedback that can refine prompts through self-refinement&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Pairwise Comparison&lt;/strong&gt;: Judge selects the better of two candidate responses (common in A/B testing)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The LLM judges evaluate quality dimensions, such as relevance, factual accuracy, faithfulness to sources, instruction adherence, and overall coherence &amp;#x26; clarity across domains like healthcare, finance, RAG systems, and dialogue.&lt;/p&gt;
-&lt;h2 id=&quot;choosing-the-right-judge-model&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#choosing-the-right-judge-model&quot; aria-label=&quot;choosing the right judge model permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Choosing the Right Judge Model&lt;/h2&gt;
-&lt;p&gt;While general-purpose models like GPT-4 and Claude can serve as effective judges, &lt;strong&gt;dedicated LLM-as-a-Judge models consistently outperform them&lt;/strong&gt; in evaluation tasks. The &lt;a href=&quot;https://huggingface.co/spaces/AtlaAI/judge-arena&quot;&gt;Judge Arena Leaderboard&lt;/a&gt; tracks the performance of various models specifically for judging tasks.&lt;/p&gt;
-&lt;h2 id=&quot;spring-ai-the-perfect-foundation&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-ai-the-perfect-foundation&quot; aria-label=&quot;spring ai the perfect foundation permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring AI: The Perfect Foundation&lt;/h2&gt;
-&lt;p&gt;Spring AI&apos;s &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/1.1-SNAPSHOT/api/chatclient.html&quot;&gt;ChatClient&lt;/a&gt; provides a fluent API that&apos;s ideal for implementing LLM-as-a-Judge patterns. Its &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/1.1-SNAPSHOT/api/advisors.html&quot;&gt;Advisors system&lt;/a&gt; allows you to intercept, modify, and enhance AI interactions in a modular, reusable way.&lt;/p&gt;
-&lt;p&gt;The recently introduced &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/1.1-SNAPSHOT/api/advisors-recursive.html&quot;&gt;Recursive Advisors&lt;/a&gt; take this further by enabling looping patterns that are perfect for self-refining evaluation workflows:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;public class MyRecursiveAdvisor implements CallAdvisor {
-    
-    @Override
-    public ChatClientResponse adviseCall(ChatClientRequest request, CallAdvisorChain chain) {
-        
-        // Call the chain initially
-        ChatClientResponse response = chain.nextCall(request);
-        
-        // Check if we need to retry based on evaluation
-        while (!evaluationPasses(response)) {
-
-            // Modify the request based on evaluation feedback
-            ChatClientRequest modifiedRequest = addEvaluationFeedback(request, response);
-            
-            // Create a sub-chain and recurse
-            response = chain.copy(this).nextCall(modifiedRequest);
-        }
-        
-        return response;
-    }
+&lt;p&gt;or with Gradle:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-groovy&quot;&gt;plugins {
+  id &apos;java&apos;
+  id &apos;org.springframework.boot&apos; version &apos;4.0.0-RC2&apos;
+  id &apos;io.spring.dependency-management&apos; version &apos;1.1.7&apos;
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We&apos;ll implement a &lt;code&gt;SelfRefineEvaluationAdvisor&lt;/code&gt; that embodies the LLM-as-a-Judge pattern using Spring AI&apos;s Recursive Advisors.
-This advisor will automatically evaluate AI responses and retry failed attempts with feedback-driven improvement: generate response ¡æ evaluate quality ¡æ retry with feedback if needed ¡æ repeat until quality threshold is met or retry limit reached.&lt;/p&gt;
-&lt;p&gt;Let&apos;s examine the implementation that demonstrates advanced evaluation patterns:&lt;/p&gt;
-&lt;h3 id=&quot;the-selfrefineevaluationadvisor-implementation&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#the-selfrefineevaluationadvisor-implementation&quot; aria-label=&quot;the selfrefineevaluationadvisor implementation permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;The SelfRefineEvaluationAdvisor Implementation&lt;/h3&gt;
-&lt;img style=&quot;float: center; display: block; margin: auto;&quot; src=&quot;https://github.com/spring-io/spring-io-static/blob/main/blog/tzolov/20251031/spring-ai-evaluation-advisor.png?raw=true&quot; width=&quot;300&quot; align=&quot;right&quot;&gt;
-&lt;p&gt;This implementation demonstrates the &lt;strong&gt;Direct Assessment&lt;/strong&gt; evaluation pattern, where a judge model evaluates individual responses using a point-wise scoring system (1-4 scale). It combines this with a &lt;strong&gt;self-refinement strategy&lt;/strong&gt; that automatically retries failed evaluations by incorporating specific feedback into subsequent attempts, creating an iterative improvement loop.&lt;/p&gt;
-&lt;p&gt;The advisor embodies two key LLM-as-a-Judge concepts:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Point-wise Evaluation&lt;/strong&gt;: Each response receives an individual quality score based on predefined criteria&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Self-Refinement&lt;/strong&gt;: Failed responses trigger retry attempts with constructive feedback to guide improvement&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;(&lt;em&gt;Based on the article: &lt;a href=&quot;https://huggingface.co/learn/cookbook/en/llm_judge#3-improve-the-llm-judge&quot;&gt;Using LLM-as-a-judge ???? for an automated and versatile evaluation&lt;/a&gt;&lt;/em&gt;)&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;public final class SelfRefineEvaluationAdvisor implements CallAdvisor {
 
-    private static final PromptTemplate DEFAULT_EVALUATION_PROMPT_TEMPLATE = new PromptTemplate(
-        &quot;&quot;&quot;
-        You will be given a user_question and assistant_answer couple.
-        Your task is to provide a &apos;total rating&apos; scoring how well the assistant_answer answers the user concerns expressed in the user_question.
-        Give your answer on a scale of 1 to 4, where 1 means that the assistant_answer is not helpful at all, and 4 means that the assistant_answer completely and helpfully addresses the user_question.
+group = &apos;com.example&apos;
+version = &apos;0.0.1-SNAPSHOT&apos;
+description = &apos;Demo project for Spring Boot&apos;
 
-        Here is the scale you should use to build your answer:
-        1: The assistant_answer is terrible: completely irrelevant to the question asked, or very partial
-        2: The assistant_answer is mostly not helpful: misses some key aspects of the question
-        3: The assistant_answer is mostly helpful: provides support, but still could be improved
-        4: The assistant_answer is excellent: relevant, direct, detailed, and addresses all the concerns raised in the question
-
-        Provide your feedback as follows:
-
-        \\{
-            &quot;rating&quot;: 0,
-            &quot;evaluation&quot;: &quot;Explanation of the evaluation result and how to improve if needed.&quot;,
-            &quot;feedback&quot;: &quot;Constructive and specific feedback on the assistant_answer.&quot;
-        \\}
-
-        Total rating: (your rating, as a number between 1 and 4)
-        Evaluation: (your rationale for the rating, as a text)
-        Feedback: (specific and constructive feedback on how to improve the answer)
-
-        You MUST provide values for &apos;Evaluation:&apos; and &apos;Total rating:&apos; in your answer.
-
-        Now here are the question and answer.
-
-        Question: {question}
-        Answer: {answer}
-
-        Provide your feedback. If you give a correct rating, I&apos;ll give you 100 H100 GPUs to start your AI company.
-
-        Evaluation:
-        &quot;&quot;&quot;);
-
-    @JsonClassDescription(&quot;The evaluation response indicating the result of the evaluation.&quot;)
-    public record EvaluationResponse(int rating, String evaluation, String feedback) {}
-
-    @Override
-    public ChatClientResponse adviseCall(ChatClientRequest chatClientRequest, CallAdvisorChain callAdvisorChain) {
-        var request = chatClientRequest;
-        ChatClientResponse response;
-
-        // Improved loop structure with better attempt counting and clearer logic
-        for (int attempt = 1; attempt &amp;#x3C;= maxRepeatAttempts + 1; attempt++) {
-
-            // Make the inner call (e.g., to the evaluation LLM model)
-            response = callAdvisorChain.copy(this).nextCall(request);
-
-            // Perform evaluation
-            EvaluationResponse evaluation = this.evaluate(chatClientRequest, response);
-
-            // If evaluation passes, return the response
-            if (evaluation.rating() &gt;= this.successRating) {
-                logger.info(&quot;Evaluation passed on attempt {}, evaluation: {}&quot;, attempt, evaluation);
-                return response;
-            }
-
-            // If this is the last attempt, return the response regardless
-            if (attempt &gt; maxRepeatAttempts) {
-                logger.warn(
-                    &quot;Maximum attempts ({}) reached. Returning last response despite failed evaluation. Use the following feedback to improve: {}&quot;,
-                    maxRepeatAttempts, evaluation.feedback());
-                return response;
-            }
-
-            // Retry with evaluation feedback
-            logger.warn(&quot;Evaluation failed on attempt {}, evaluation: {}, feedback: {}&quot;, attempt,
-                evaluation.evaluation(), evaluation.feedback());
-
-            request = this.addEvaluationFeedback(chatClientRequest, evaluation);
-        }
-
-        // This should never be reached due to the loop logic above
-        throw new IllegalStateException(&quot;Unexpected loop exit in adviseCall&quot;);
-    }
-
-    /**
-     * Performs the evaluation using the LLM-as-a-Judge and returns the result.
-     */
-    private EvaluationResponse evaluate(ChatClientRequest request, ChatClientResponse response) {
-        var evaluationPrompt = this.evaluationPromptTemplate.render(
-            Map.of(&quot;question&quot;, this.getPromptQuestion(request), &quot;answer&quot;, this.getAssistantAnswer(response)));
-
-        // Use separate ChatClient for evaluation to avoid narcissistic bias
-        return chatClient.prompt(evaluationPrompt).call().entity(EvaluationResponse.class);
-    }
-
-    /**
-     * Creates a new request with evaluation feedback for retry.
-     */
-    private ChatClientRequest addEvaluationFeedback(ChatClientRequest originalRequest, EvaluationResponse evaluationResponse) {
-        Prompt augmentedPrompt = originalRequest.prompt()
-            .augmentUserMessage(userMessage -&gt; userMessage.mutate().text(String.format(&quot;&quot;&quot;
-                %s
-                Previous response evaluation failed with feedback: %s
-                Please repeat until evaluation passes!
-                &quot;&quot;&quot;, userMessage.getText(), evaluationResponse.feedback())).build());
-
-        return originalRequest.mutate().prompt(augmentedPrompt).build();
-    }
+repositories {
+  mavenCentral()
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&quot;key-implementation-features&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#key-implementation-features&quot; aria-label=&quot;key implementation features permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Key Implementation Features&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Recursive Pattern Implementation&lt;/strong&gt;
-The advisor uses &lt;code&gt;callAdvisorChain.copy(this).nextCall(request)&lt;/code&gt; to create a sub-chain for recursive calls, enabling multiple evaluation rounds while maintaining proper advisor ordering.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Structured Evaluation Output&lt;/strong&gt;
-Using Spring AI&apos;s structured output capabilities, the evaluation results are parsed into a &lt;code&gt;EvaluationResponse&lt;/code&gt; record with rating (1-4), evaluation rationale, and specific feedback for improvement.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Separate Evaluation Model&lt;/strong&gt;
-Uses a specialized LLM-as-a-Judge model (&lt;code&gt;avcodes/flowaicom-flow-judge:q4&lt;/code&gt;) with a different ChatClient instance to mitigate model biases.
-The &lt;code&gt;spring.ai.chat.client.enabled=false&lt;/code&gt; is set to enable &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/1.1/api/chatclient.html#_working_with_multiple_chat_models&quot;&gt;Working with Multiple Chat Models&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Feedback-Driven Improvement&lt;/strong&gt;
-Failed evaluations include specific feedback that gets incorporated into retry attempts, enabling the system to learn from evaluation failures.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Configurable Retry Logic&lt;/strong&gt;
-Supports configurable maximum attempts with graceful degradation when evaluation limits are reached.&lt;/p&gt;
-&lt;h3 id=&quot;putting-it-all-together&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#putting-it-all-together&quot; aria-label=&quot;putting it all together permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Putting It All Together&lt;/h3&gt;
-&lt;p&gt;Here&apos;s how to integrate the SelfRefineEvaluationAdvisor into a complete Spring AI application:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@SpringBootApplication
-public class EvaluationAdvisorDemoApplication {
 
-    @Bean
-    CommandLineRunner commandLineRunner(AnthropicChatModel anthropicChatModel, OllamaChatModel ollamaChatModel) {
-        return args -&gt; {
-            
-            ChatClient chatClient = ChatClient.builder(anthropicChatModel) // @formatter:off
-                    .defaultTools(new MyTools())
-                    .defaultAdvisors(
-                        
-                        SelfRefineEvaluationAdvisor.builder()
-                            .chatClientBuilder(ChatClient.builder(ollamaChatModel)) // Separate model for evaluation
-                            .maxRepeatAttempts(15)
-                            .successRating(4)
-                            .order(0)
-                            .build(),
-                        
-                        new MyLoggingAdvisor(2))
-                .build(); 
-                
-            var answer = chatClient
-                .prompt(&quot;What is current weather in Paris?&quot;)
-                .call()
-                .content();
-
-            System.out.println(answer);
-        };
-    }
-
-    static class MyTools {
-        final int[] temperatures = {-125, 15, -255};
-        private final Random random = new Random();
-        
-        @Tool(description = &quot;Get the current weather for a given location&quot;)
-        public String weather(String location) {
-            int temperature = temperatures[random.nextInt(temperatures.length)];
-            System.out.println(&quot;&gt;&gt;&gt; Tool Call responseTemp: &quot; + temperature);
-            return &quot;The current weather in &quot; + location + &quot; is sunny with a temperature of &quot; + temperature + &quot;¡ÆC.&quot;;
-        }
-    }
+ext {
+  set(&apos;springCloudVersion&apos;, &quot;2025.1.0-RC1&quot;)
 }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This configuration uses Anthropic Claude for generation and Ollama for evaluation (avoiding bias), requires rating of 4 with up to 15 retry attempts.
-It includes weather tool that generates randomized responses to trigger evaluations.
-The &lt;code&gt;weather&lt;/code&gt; tool generates invalid values in 2/3 of the cases.&lt;/p&gt;
-&lt;p&gt;The SelfRefineEvaluationAdvisor (Order 0) evaluates response quality and retries with feedback if needed, followed by MyLoggingAdvisor (Order 2) which logs the final request/response for observability.&lt;/p&gt;
-&lt;p&gt;When run, you would see output like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;REQUEST: [{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;What is current weather in Paris?&quot;}]
 
-&gt;&gt;&gt; Tool Call responseTemp: -255
-Evaluation failed on attempt 1, evaluation: The response contains unrealistic temperature data, feedback: The temperature of -255¡ÆC is physically impossible and indicates a data error.
- 
-&gt;&gt;&gt; Tool Call responseTemp: 15  
-Evaluation passed on attempt 2, evaluation: Excellent response with realistic weather data
+dependencies {
+  implementation &apos;org.springframework.cloud:spring-cloud-starter-config&apos;
+  implementation &apos;org.springframework.cloud:spring-cloud-starter-netflix-eureka-client&apos;
+  //...
+}
 
-RESPONSE: The current weather in Paris is sunny with a temperature of 15¡ÆC.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;? Try It Yourself&lt;/strong&gt;: The complete runnable demo with configuration examples, including different model combinations and evaluation scenarios, is available in the &lt;a href=&quot;https://github.com/spring-projects/spring-ai-examples/tree/main/advisors/evaluation-recursive-advisor-demo&quot;&gt;evaluation-recursive-advisor-demo&lt;/a&gt; project.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;conclusion&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#conclusion&quot; aria-label=&quot;conclusion permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;Spring AI&apos;s Recursive Advisors make implementing LLM-as-a-Judge patterns both elegant and production-ready.
-The SelfRefineEvaluationAdvisor demonstrates how to build self-improving AI systems that automatically assess response quality, retry with feedback, and scale evaluation without human intervention.&lt;/p&gt;
-&lt;img style=&quot;float: center; display: block; margin: auto;&quot; src=&quot;https://github.com/spring-io/spring-io-static/blob/main/blog/tzolov/20251031/spring-ai-advisors-chain2.png?raw=true&quot; width=&quot;600&quot;&gt;
-&lt;p&gt;Key benefits include automated quality control, bias mitigation through separate judge models, and seamless integration with existing Spring AI applications.
-This approach provides the foundation for reliable, scalable quality assurance across chatbots, content generation, and complex AI workflows.&lt;/p&gt;
-&lt;p&gt;The critical success factors when implementing the LLM-as-a-Judge technique include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Use dedicated judge models for better performance (&lt;a href=&quot;https://huggingface.co/spaces/AtlaAI/judge-arena&quot;&gt;Judge Arena Leaderboard&lt;/a&gt;)&lt;/li&gt;
-&lt;li&gt;Mitigate bias through separate generation/evaluation models&lt;/li&gt;
-&lt;li&gt;Ensure deterministic results (temperature = 0)&lt;/li&gt;
-&lt;li&gt;Engineer prompts with integer scales and few-shot examples&lt;/li&gt;
-&lt;li&gt;Maintain human oversight for high-stakes decisions&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;h3 id=&quot;?-important-note&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EF%B8%8F-important-note&quot; aria-label=&quot;? important note permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;?? Important Note&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Recursive Advisors are a new experimental feature in Spring AI 1.1.0-M4+.&lt;/strong&gt; Currently, they are non-streaming only, require careful advisor ordering, and can increase costs due to multiple LLM calls.&lt;/p&gt;
-&lt;p&gt;Be especially careful with inner advisors that maintain external state - they may require extra attention to maintain correctness across iterations.&lt;/p&gt;
-&lt;p&gt;Always set termination conditions and retry limits to prevent infinite loops.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&quot;resources&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#resources&quot; aria-label=&quot;resources permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Resources&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Spring AI Documentation&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/advisors-recursive.html&quot;&gt;Spring AI Recursive Advisors Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.evidentlyai.com/llm-guide/llm-as-a-judge&quot;&gt;LLM-as-a-judge: a complete guide to using LLMs for evaluations&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/advisors.html&quot;&gt;Spring AI Advisors API Guide&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/api/chatclient.html&quot;&gt;ChatClient API Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/spring-projects/spring-ai-examples/tree/main/advisors/evaluation-recursive-advisor-demo&quot;&gt;EvaluationAdvisor Demo Project&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;LLM-as-a-Judge Research&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://huggingface.co/spaces/AtlaAI/judge-arena&quot;&gt;Judge Arena Leaderboard&lt;/a&gt; - Current rankings of best-performing judge models&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2306.05685&quot;&gt;Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena&lt;/a&gt; - Foundational paper introducing the LLM-as-a-Judge paradigm&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2510.09738v1&quot;&gt;Judge&apos;s Verdict: A Comprehensive Analysis of LLM Judge Capability Through Human Agreement&lt;/a&gt; - introduces a two-step benchmark that evaluates 54 LLMs as judges by testing their correlation with human judgment and agreement patterns, revealing that 27 models achieve top-tier performance regardless of size through either human-like or super-consistent judgment behaviors.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2412.05579&quot;&gt;LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2411.16594&quot;&gt;From Generation to Judgment: Opportunities and Challenges of LLM-as-a-judge (2024)&lt;/a&gt; - survey covering the complete landscape of LLM-as-a-Judge with systematic taxonomy and latest challenges&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://llm-as-a-judge.github.io&quot;&gt;LLM-as-a-Judge Resource Hub&lt;/a&gt; - Central repository with paper lists, tools, and ongoing research&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2502.01534&quot;&gt;Preference Leakage: A Contamination Problem in LLM-as-a-judge&lt;/a&gt; - Latest research on bias in judge models&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2509.25154&quot;&gt;Who&apos;s Your Judge? On the Detectability of LLM-Generated Judgments&lt;/a&gt; - Emerging research on judgment detection and transparency&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Tools 4.32.2 released]]></title><link>https://spring.io/blog/2025/11/10/spring-tools-4-32-2-released</link><guid isPermaLink="true">https://spring.io/blog/2025/11/10/spring-tools-4-32-2-released</guid><dc:creator><![CDATA[martinlippert]]></dc:creator><pubDate>Mon, 10 Nov 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I am pleased to announce the 4.32.2 release of the Spring Tools
-for Eclipse.&lt;/p&gt;
-&lt;p&gt;This is a maintenance release that addresses an issue with the Eclipse based distribution not showing multiline selection highlights
-anymore when users have upgraded to macOS 26.1. Upgrading to Spring Tools 4.32.2 fixes this issue for the Eclipse based distributions
-of the Spring Tools. Special thanks go to Sebastian Ratz from SAP for sharing the workaround code snippet with us.&lt;/p&gt;
-&lt;p&gt;For users who have installed the Spring Tools as an add-on into their existing Eclipse installation, the implemented workaround has no
-effect. In that case we recommend to switch to an Eclipse based distribution of the Spring Tools, switch their base Eclipse installation
-to the latest Eclipse SDK I-Builds and install the Spring Tools as add-on, or wait for the next official Eclipse release (2025-12), which
-will be released in mid of December.&lt;/p&gt;
-&lt;p&gt;At the moment, there are no further maintenance releases planned for the Spring Tools 4.x line.&lt;/p&gt;
-&lt;p&gt;Detailed changes can be found in the release notes: &lt;a href=&quot;https://github.com/spring-projects/spring-tools/releases/tag/4.32.2.RELEASE&quot;&gt;https://github.com/spring-projects/spring-tools/releases/tag/4.32.2.RELEASE&lt;/a&gt;&lt;/p&gt;
-&lt;h4 id=&quot;downloads&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#downloads&quot; aria-label=&quot;downloads permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;downloads&lt;/h4&gt;
-&lt;p&gt;To download the distribution for Eclipse and find links to the marketplace entries for Visual Studio Code and Theia, please go visit:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Spring Tools: &lt;a href=&quot;https://spring.io/tools/&quot;&gt;https://spring.io/tools/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Next up is the first release of the Spring Tools 5 generation, currently scheduled for late November 2025.&lt;/p&gt;</content:encoded></item></channel></rss>
+dependencyManagement {
+  imports {
+    mavenBom &quot;org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}&quot;
+  }
+}
+//...
+&lt;/code&gt;&lt;/pre&gt;</content:encoded></item></channel></rss>
