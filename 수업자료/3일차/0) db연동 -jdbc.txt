@@ -1,0 +1,11 @@
+0) db연동 -jdbc 
+1 )DataSource -> 커넥션 얻어오기 (  커넥션풀링기법: 미리 커넥션을 여러개 가지고 있다가 제공함)
+2 )데이터베이스  -> mybatis (기본) CRUD -> 간단하게 작성할 수 있다 
+
+테스트하기 
+
+내일: rest api  ( 데이터응답  :   java -> json 변환  ,   json ->  java 변환  ) :  @ResponseBody   @RequestBody
+       파일업로드 
+
+
+수요일: 2인 1조: 스프링 간단한 미니프로젝트  (스프링부트 개발 설정 완료)

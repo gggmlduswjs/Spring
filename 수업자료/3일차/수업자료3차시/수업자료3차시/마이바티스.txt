@@ -1,0 +1,108 @@
+mybatis  사이트  ( Mapper  파일 얻어오기)
+https://mybatis.org/mybatis-3/ko/getting-started.html
+
+ 
+
+
+#######################################################
+Mybatis
+Mybatis  SqlSession 사용하여 데이터베이스 처리하기 , 조인된 쿼리 작성하기
+
+mybatis
+  의존성(라이브러리 추가)
+ 1)  pom.xml (spring-jdbc, ojdbc8 ,   mybatis-jdbc, mybatis )
+ 2)  spring -> root-context.xml   ( datasource , sqlSessionFactory, sqlSession    bean생성 )
+ 3)  mapper 작성 ( src/main/resources)
+ 4)  repository (dao) 작성 
+     -SqlSession   주입 
+       selectOne ,  selectList,   insert ,  update , delete 
+ 5)   repository  테스트하기
+
+Mybatis사용시 주의사항 !!!! ( 컬럼의 이름과 DTO 객체의 속성명이 일치해야 한다.  다르다면 값이 제대로 담길 수 없다)
+==>resultMap으로 해결할 수 있다.
+
+
+@Repository
+public class OrderRepository {
+	 @Autowired
+	    private SqlSession session;
+	    private static String namespace = "com.acorn.OrderMapper.";	  
+	    
+	    public List<OrderDTO> selectAll() throws Exception {
+	        return session.selectList(namespace+"selectAll");
+	    } // List<E> selectList(String statement)	
+
+}
+
+
+mapper  작성하기
+<mapper namespace="com.acorn.OrderMapper">      
+    <select id="selectAll" resultType="OrderDTO">
+        SELECT  orderno,  o.userid , username,  tel , price
+        FROM   ordera      o
+        JOIN     membera    m
+        ON      o.userid = m.userid            
+    </select>     
+</mapper>
+
+조인된 쿼리를 가져오기  
+(ordera, membera 테이블 사용하기)
+   
+<!-- 
+public class OrderDTO {	
+	String orderNo;  //주문번호
+	String userid;   //사용자id
+	String name;    //이름
+	String tel;
+	String price ;//  총주문금액  
+}
+ 
+
+ * 
+  * // 조인된 쿼리를 저장할 테이블
+ create table ordera(
+     orderno varchar2(10) primary key, 
+     userid  varchar2(10),
+     price  varchar2(10) 
+ );
+insert into ordera  values(  'o001', 'm01', '25000');
+
+
+create table membera(
+   userid varchar2(20) primary key, 
+   username varchar2(20),
+   tel varchar2(20)
+);
+ -->
+ ###############################################################
+   resultMap 사용하는 경우 , 테이블의 컬럼명과  DTO의 속성(필드명이 다른경우) 사용
+###############################################################
+
+ <!--  resultMap 사용하는 경우  테이블의 컬러명과 DTO객체의 속성명이 다른경우 -->
+	<resultMap id="orderResult"  type="OrderDTO">
+		<result property="orderNo" column="orderno" />
+		<result property="userid"  column="userid" />
+		<result property="name"    column="username" />
+		<result property="tel"     column="tel" />
+		<result property="price"   column="price" />
+	</resultMap>
+
+    
+    <select id="selectAll" resultType="OrderDTO">
+        SELECT orderno,  o.userid , username  ,  tel ,  price
+        FROM   ordera      o
+        JOIN   membera    m
+        ON  o.userid = m.userid            
+    </select>
+     
+        
+    <select id="selectAll2" resultMap="orderResult">
+        SELECT orderno,  o.userid     , username,  tel , price
+        FROM   ordera      o
+        JOIN   membera    m
+        ON  o.userid = m.userid            
+    </select>
+       
+
+ 
+

@@ -1,0 +1,22 @@
+
+1. 데이터소스(datasource 객체 생성하기 ) - 스프링 컨테이너 xml 객체 생성 지시
+2. mybatis 라이브러리 - 메이븐(pom.xml)-2개의 mybatis라이브러리 추가
+3. 테이블에 대한 매퍼작성하기(src/main/resources - mapper 플도 만들기) ****Mapper.xml 이름으로 작성한다
+															-sql 정보
+4. type Alias 설정하기
+
+<<사용하기>>
+
+MemverRepository{
+	
+	//바티스 sqlSession 객체 주입 받아서 ! (스프링 컨테이너로부터 주입받자!!!)
+	
+	// 제공하는 기능(내서드)
+	// selectOne
+	// selectList
+	// insert
+	// update
+	// delete
+
+
+}

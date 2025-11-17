@@ -53,3 +53,13 @@
 11월 14, 2025 14:43:44.113 [10872:18624:1114/144344.112:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
 11월 14, 2025 15:14:12.294 Created TensorFlow Lite XNNPACK delegate for CPU.
 11월 14, 2025 15:14:12.426 [21124:19904:1114/151412.426:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+
+11월 17, 2025 09:45:47.811 NEW SESSION
+11월 17, 2025 09:45:47.811 [7552:11340:1117/094547.808:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 17, 2025 09:45:47.968 Created TensorFlow Lite XNNPACK delegate for CPU.
+
+11월 17, 2025 15:22:02.792 NEW SESSION
+11월 17, 2025 15:22:02.792 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 17, 2025 15:22:02.823 [25864:15832:1117/152202.823:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED
+11월 17, 2025 16:25:54.33 Created TensorFlow Lite XNNPACK delegate for CPU.
+11월 17, 2025 16:25:54.148 [21256:12248:1117/162554.148:ERROR:google_apis\gcm\engine\registration_request.cc:292] Registration response error message: QUOTA_EXCEEDED

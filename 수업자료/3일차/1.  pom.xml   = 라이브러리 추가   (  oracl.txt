@@ -1,0 +1,6 @@
+1.  pom.xml   => 라이브러리 추가   (  oracle,  spring-jdbc, mybatis, mybatis-spring)
+2.  root-context.xml  => 스프링에게 객체생성 지시  ( datasource,  batis 관련객체 생성)
+3.  src/main/resources 아래에   mapper  만들고   ***Mapper.xml작성하기
+    src/main/resources 아래에  mybaits-config.xml 작성하기
+4.  Repository 작성하기  (한개만 ,조회하기)
+5.  Repository  테스트하기

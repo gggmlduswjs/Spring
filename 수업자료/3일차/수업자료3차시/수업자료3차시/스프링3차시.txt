@@ -1,0 +1,51 @@
+
+
+ 
+ 학습목표
+1. SpringDataSource를 이용하여  Connection을 얻어오는 방법을 적용할 수 있다.
+2. 데이터베이스 조회, 등록을 서비스할 수 있다.
+3. mybytatis를 사용하여  고객정보를 CRUD  할 수 있다.
+
+
+
+
+
+필요라이브러리 ( dependency)
+		<dependency>
+		    <groupId>com.oracle.ojdbc</groupId>
+		    <artifactId>ojdbc8</artifactId>
+		    <version>19.3.0.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
+
+ 
+
+
+
+
+### SpringDataSource   객체 생성을 스프링에게 지시한다 #####
+위치>>
+
+src-> webapp -> WEB-INF  -> spring - > root-context.xml  문서를 편집한다, 아래 코드를 추가함 
+
+!! <bean>은  객체생성을 하기 위해 사용함 
+  <property  name="써터명"> =>  생성된 객체의 쎄터를 통해서 필요한 값을 전달한다 !!
+ 
+ 
+	<bean id="d" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:testdb"></property>
+		<property name="username" value="scott"></property>
+		<property name="password" value="tiger"></property>
+	</bean>
+
+
+
+ 
+	
+

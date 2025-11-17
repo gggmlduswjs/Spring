@@ -1,0 +1,21 @@
+
+1. MyBatis 의존성 추가 (pom.xml)
+2. src -> main -> resources -> mapper 폴더 생성
+
+→ 매퍼 XML 파일을 넣는 위치
+
+3. src -> main -> resources -> mybatis-config.xml 파일 생성
+
+→ MyBatis 설정 파일
+
+4. Repository 클래스 작성
+
+→ SqlSession을 통해 DB 접근
+
+5. Service 클래스 작성
+
+→ 비즈니스 로직 처리
+
+6. Controller 작성
+
+→ 클라이언트 요청 처리

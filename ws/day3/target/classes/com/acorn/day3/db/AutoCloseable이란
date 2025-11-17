@@ -1,0 +1,16 @@
+AutoCloseable이란?
+
+
+
+public interface AutoCloseable {
+    void close() throws Exception;
+}
+ 
+ 
+부모인  AutoCloseable type으로  아래으 객체를 다룰 수 있다. 
+ 
+ 
+ Connection , ResultSet , Statement, PrepareStatement 클래스들은 
+ 모두 AutoCloseable을 구현하였다.
+ 
+ 즉 AutoCloseable type으로 다룰 수 있다

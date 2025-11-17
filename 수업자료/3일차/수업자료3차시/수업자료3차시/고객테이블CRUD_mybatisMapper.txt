@@ -1,0 +1,35 @@
+<mapper namespace="com.acorn.MemberMapper">
+<select id="count" resultType="int">
+SELECT count(*) FROM  memberacorn
+</select>
+
+<select id="selectAll" resultType="Member">
+    SELECT *
+    FROM memberacorn
+</select>
+
+
+ <insert id="insert" parameterType="Member">
+  INSERT INTO memberacorn
+      (id, pwd, name)
+  VALUES
+      (#{id}, #{pwd}, #{name})
+</insert>
+
+
+ <update id="update" parameterType="Member">
+    UPDATE memberacorn
+    SET   name = #{name} ,
+          pwd=   #{pwd)
+    WHERE id = #{id}
+</update>
+
+ <delete id="deleteAll">
+    DELETE FROM memberacorn
+</delete>
+
+
+<delete id="delete" parameterType="String">
+    DELETE FROM memberacorn  WHERE id = #{id}
+</delete>
+</mapper>
