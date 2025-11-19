@@ -2,11 +2,17 @@
 <aop-reference-model>
 <aop-project name="day2Prac"/>
 <aop-project name="di"/>
+<aop-project name="uploadSample"/>
+<aop-project name="apiPrj"/>
+<aop-project name="project"/>
 <aop-project name="batisPrj2"/>
+<aop-project name="day4prac"/>
+<aop-project name="uploadTestPrj"/>
 <aop-project name="batisPrj"/>
 <aop-project name="day1"/>
 <aop-project name="day1Prac"/>
 <aop-project name="day3"/>
+<aop-project name="uploadSimple"/>
 <aop-project name="transPrj"/>
 <aop-project name="day3prac"/>
 <aop-project name="aopSample">
@@ -16,5 +22,6 @@
 </aspect-definition>
 </aop-project>
 <aop-project name="day2"/>
+<aop-project name="day4"/>
 <aop-project name="controllerPrj"/>
 </aop-reference-model>

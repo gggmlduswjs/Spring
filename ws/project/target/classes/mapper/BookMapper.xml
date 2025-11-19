@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BookMapper">
+
+    <select id="findAll" resultType="Book">
+        SELECT * FROM Book ORDER BY id
+    </select>
+
+    <select id="findById" parameterType="int" resultType="Book">
+        SELECT * FROM Book WHERE id=#{id}
+    </select>
+
+    <insert id="save" parameterType="Book">
+        INSERT INTO Book (id, title, author, price, cover)
+        VALUES (seq_book.nextval, #{title}, #{author}, #{price}, #{cover})
+    </insert>
+
+    <update id="update" parameterType="Book">
+        UPDATE Book
+        SET title=#{title},
+            author=#{author},
+            price=#{price},
+            cover=#{cover}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM Book WHERE id=#{id}
+    </delete>
+</mapper>
+

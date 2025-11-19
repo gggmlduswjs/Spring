@@ -1,0 +1,8 @@
+5차시 - 프로젝트
+
+1. pom.xml - dependencies 안에 둘 것!!
+-spring-test
+-lombok
+-json관련
+-데이터베이스관련
+-upload 관련

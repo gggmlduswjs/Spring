@@ -1,0 +1,35 @@
+
+클라이언트가 Content-Type: application/json 헤더와 함께 JSON 데이터를 HTTP 요청의 본문(body) 에 담아 보낼 때,
+Spring에서는 이 JSON 문자열을 자바 객체로 자동 변환해주는 기능을 제공한다
+
+(@RequestBody)
+
+ 
+{
+  "username": "test",
+  "age": 20
+}
+ 
+ 
+@PostMapping("/user")
+public String addUser(@RequestBody UserDto user) {
+    // Spring이 JSON → UserDto 변환을 자동 수행
+    System.out.println(user.getUsername());   
+    return "ok";
+}
+ 
+ 이 기능이 동작하려면 필요한 것:
+Jackson 라이브러리 (기본적으로 Spring Boot에는 포함되어 있음) 
+JSON 문자열 ↔ Java 객체 자동 변환
+
+
+
+ ####정리
+클라이언트가 JSON 형식으로 전송한 데이터를
+서버에서 자바 객체로 자동 변환해주는 역할을 Spring이 대신 수행하며,
+이 때 JSON 파싱을 위한 Jackson 등의 라이브러리가 필요하다. 
+(dependency) 추가 하지 않으면 오류발생함 !!
+
+
+
+

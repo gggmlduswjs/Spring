@@ -1,0 +1,46 @@
+
+
+
+
+
+일반적으로 서블릿에서는 다음과 같은 방식으로 데이터 접근 가능 여부가 결정된다
+
+
+POST방식####################
+
+form으로 전송된 데이터  (POST)   
+기본값인  :   application/x-www-form-urlencoded인 경우  (기본값) 
+getParameter()매서드로 읽을 수 있다 
+HTTP 요청의 콘텐츠 타입(Content-Type)에 따라 구분된다
+
+
+
+form에 감싸서  화면에서 
+회원가입정보를 서버측 코드로 보내면  
+name값을 기준으로 (키=값형태로 만들어서 보내게 되어있다. 약속되어 있음)
+그래서 서버는 자동으로 규칙에 따라 파싱한다 (잘라서 데이터를 유지함)
+
+
+
+예시)
+id="test"&name="홍길동"&addr="서울시 노원구"
+
+ 
+
+ 
+post를 보내는 경우 ( json  ,content-type:application/json)인 경우는 
+getParameter로 읽을 수 없다
+요청바디를 직접읽어서 json문자열을  자바로 변환 후 사용해야 한다 
+
+1)기존 mvc 코드 확인하기
+2)이 작업은 단순하고 규칙이 있으므로 스프링이 대신해 준다  @RequestBody
+
+ 
+
+
+정리==>
+getParameter()는 URL 인코딩 규칙(application/x-www-form-urlencoded)을 따르는 데이터만 읽을 수 있으며, 
+JSON이나 파일 업로드 등은 별도 처리 필요.
+
+GET방식#################33
+:쿼리스트링으로  전달되면 GET방식은 getParameter()로 읽어올 수 있다

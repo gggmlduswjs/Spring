@@ -1,0 +1,64 @@
+
+1. 스프링을 이용하여 간편한 업로드 진행
+2. 스프링이 사용하는 필요라이브러리 추가
+3. 라이브러리 객체 생성
+4. 설정정보 설정( 업로드파일크기 )
+5. 사용자form 화면에서  method와  enctype을 아래와 같이 지정해야함 
+<form name="frm" action="/tt/upload"  method="post"  enctype="multipart/form-data">
+6. post->요청정보를 요청바디에 정보를 실여 보낸다 
+7. 스프링에서는 파일-> MultipartFile로 자동으로 받아 준다 
+
+
+
+
+서버에서 할일
+@PostMapping("/upload")
+	public String upload( String  goodsCode   , MultipartFile file , Model model) throws IllegalStateException, IOException {
+	
+1. MultipartFile로 받기    @ModelAttribute
+2. MultipartFile객체로 부터 오리진 파일이름얻어오기 
+3. MultipartFile객체가 제공하는 transferTo 매서드 사용하기
+4. 오리진이름과 저장이름을 달리해야 함 (실제는 )
+   자바의 UUID라는 라이브러리를 이용해서 중복되지 않는 저장이름을 생성하고 저장하기 
+
+   
+   ## 여러개 파일 업로드 
+ @PostMapping("/upload")
+	public String upload( String  goodsCode   , MultipartFile file , Model model) throws IllegalStateException, IOException {
+ 
+ 
+ 
+ 
+ ####################
+1)
+
+	<!--  file upload 사용되는  라이브러리 -->
+	<dependency>
+	<groupId>commons-fileupload</groupId>
+	<artifactId>commons-fileupload</artifactId>
+	<version>1.3.1</version>
+	</dependency>
+	<!-- commons-io -->
+	<dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>2.4</version>
+	</dependency>
+	
+	
+ 
+ 
+ 
+2)
+ 	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">     
+      <beans:property name="maxUploadSize" value="10485760" />  <!--  10M   1024byte * 1024  1mbyte  *10  = 10M -->
+      <beans:property name="defaultEncoding" value="utf-8" />   <!--  l024byte =>1kbyte   , 1024kbyte == >1M   *10   =>10M -->
+   </beans:bean>
+   
+   
+ 
+ 
+ 
+   
+   
